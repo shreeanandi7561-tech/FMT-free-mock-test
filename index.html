@@ -436,35 +436,15 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Back
                 </button>
                  <div class="card">
-                    <div class="profile-header">
-                        <img class="profile-picture" src="https://via.placeholder.com/100/CCCCCC/FFFFFF?text=Profile" alt="Profile Picture">
-                        <h2 id="profile-name"></h2>
-                        <p id="profile-email"></p>
-                        <p id="pass-status"></p>
-                    </div>
+                    <h2>Student Profile</h2>
                     <div id="profile-details">
-                        <p><strong>Mobile:</strong> <span id="profile-mobile"></span></p>
-                        <p><strong>Joined:</strong> <span id="profile-joined"></span></p>
-                    </div>
-                    <div class="stat-card">
-                        <p>Average Percentage</p><span id="average-percentage"></span>
-                    </div>
-                    <div class="stat-card" style="margin-top:1.5rem;">
-                        <p>Average Rank</p><span id="average-rank"></span>
-                    </div>
-
-                    <div class="performance-charts">
-                        <div class="chart-card">
-                            <h4>Last 5 Test Scores</h4>
-                            <canvas id="scores-chart"></canvas>
-                        </div>
-                        <div class="chart-card">
-                             <h4>Performance by Subject</h4>
-                            <canvas id="subject-performance-chart"></canvas>
-                        </div>
+                        <p><strong>Name:</strong> <span id="profile-name"></span></p>
+                        <p><strong>Email:</strong> <span id="profile-email"></span></p>
+                        <p><strong>Pass Status:</strong> <span id="pass-status">Not Active</span></p>
+                        <p><strong>Average Rank:</strong> <span id="average-rank"></span></p>
+                        <p><strong>Average Percentage:</strong> <span id="average-percentage"></span></p>
                     </div>
                 </div>
-                 <button class="btn" style="margin-top: 1.5rem;" onclick="logout()">Log Out</button>
             </section>
 
             <section id="doubt-section" class="page chattutor-page-container">
@@ -500,7 +480,7 @@
     // =======================================================
     // ========== AUTHENTICATION SCRIPT START ================
     // =======================================================
-    const AUTH_API_ENDPOINT = "fmt-free-mock-test.vercel.app/api/auth";
+    const AUTH_API_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/auth";
     let currentUser = null;
     const authModal = document.getElementById('auth-modal');
     const loginForm = document.getElementById('login-form');
@@ -700,10 +680,10 @@
     let totalTestTime = 0;
     let testStartTime = 0;
     
-    const TEST_API_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/tests";
+    const TEST_API_ENDPOINT = "https://your-backend-api.vercel.app/api/tests";
     const PASS_API_ENDPOINT = "https://your-backend-api.vercel.app/api/pass";
-    const MCQ_GENERATOR_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/generate-mcq";
-    const CHAT_TUTOR_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/chat";
+    const MCQ_GENERATOR_ENDPOINT = "https://your-backend-api.vercel.app/api/generate-mcq";
+    const CHAT_TUTOR_ENDPOINT = "https://your-backend-api.vercel.app/api/chat";
 
     let allTests = {};
     let allQuestions = {};
@@ -817,78 +797,38 @@
             document.getElementById('average-rank').textContent = averageRank;
             document.getElementById('average-percentage').textContent = `${averagePercentage}%`;
             
-            renderScoresChart(recentLabels, recentPercentages);
-            renderSubjectPerformanceChart(subjectData);
+            if (window.scoresChartInstance) window.scoresChartInstance.destroy();
+            window.scoresChartInstance = new Chart(document.getElementById('scores-chart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: recentLabels,
+                    datasets: [{
+                        label: 'Score Percentage',
+                        data: recentPercentages,
+                        borderColor: 'var(--primary-color)',
+                        backgroundColor: 'rgba(74, 144, 226, 0.2)',
+                        tension: 0.3,
+                        pointStyle: 'circle',
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        fill: true
+                    }]
+                },
+                options: { responsive: true, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Percentage (%)' } }, x: { title: { display: true, text: 'Tests' } } } }
+            });
+
+            if (window.subjectChartInstance) window.subjectChartInstance.destroy();
+            window.subjectChartInstance = new Chart(document.getElementById('subject-performance-chart').getContext('2d'), {
+                type: 'bar',
+                data: { labels: Object.keys(subjectData), datasets: [{ label: 'Average Score (%)', data: Object.values(subjectData).map(s => (s.total / s.count).toFixed(0)), backgroundColor: 'var(--purple-color)', borderColor: 'var(--purple-color)', borderWidth: 1 }] },
+                options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+            });
 
         } catch (e) {
             console.error('Failed to fetch user history:', e);
             document.getElementById('average-rank').textContent = "N/A";
             document.getElementById('average-percentage').textContent = "N/A";
         }
-    }
-    
-    function renderScoresChart(labels, data) {
-        const ctx = document.getElementById('scores-chart').getContext('2d');
-        if (window.scoresChartInstance) window.scoresChartInstance.destroy();
-        window.scoresChartInstance = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Score Percentage',
-                    data: data,
-                    borderColor: 'var(--primary-color)',
-                    backgroundColor: 'rgba(74, 144, 226, 0.2)',
-                    tension: 0.3,
-                    pointStyle: 'circle',
-                    pointRadius: 5,
-                    pointHoverRadius: 7,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        title: { display: true, text: 'Percentage (%)' }
-                    },
-                    x: {
-                        title: { display: true, text: 'Tests' }
-                    }
-                }
-            }
-        });
-    }
-
-    function renderSubjectPerformanceChart(subjectData) {
-        const labels = Object.keys(subjectData);
-        const data = labels.map(label => (subjectData[label].total / subjectData[label].count).toFixed(0));
-        const ctx = document.getElementById('subject-performance-chart').getContext('2d');
-        if (window.subjectChartInstance) window.subjectChartInstance.destroy();
-        window.subjectChartInstance = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Average Score (%)',
-                    data: data,
-                    backgroundColor: 'var(--purple-color)',
-                    borderColor: 'var(--purple-color)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100
-                    }
-                }
-            }
-        });
     }
     
     function renderMenuTabs() {
