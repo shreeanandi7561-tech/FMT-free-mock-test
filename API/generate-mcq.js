@@ -1,27 +1,16 @@
-// A simple Node.js serverless function for Vercel
-// This function handles AI-based MCQ generation.
-
 const { createClient } = require('@supabase/supabase-js');
 const fetch = require('node-fetch');
 
-// Vercel environment variables for Supabase and Gemini API
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const geminiApiKey = process.env.GEMINI_API_KEY;
 
-// Initialize Supabase client
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-
-  // In a real app, you would validate the user's auth token here
-  // const authToken = req.headers.authorization;
-  // if (!authToken || !isValidToken(authToken)) {
-  //     return res.status(401).json({ error: 'Unauthorized' });
-  // }
 
   const { text, count, language } = req.body;
 
