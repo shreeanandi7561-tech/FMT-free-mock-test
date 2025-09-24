@@ -1,13 +1,8 @@
-// A simple Node.js serverless function for Vercel
-// This function handles user registration by connecting to Supabase.
-
 const { createClient } = require('@supabase/supabase-js');
 
-// Vercel environment variables for Supabase
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-// Initialize Supabase client
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 module.exports = async (req, res) => {
@@ -22,7 +17,6 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // Check if the user already exists
     const { data: existingUser } = await supabase
       .from('users')
       .select('mobile')
@@ -33,8 +27,6 @@ module.exports = async (req, res) => {
       return res.status(409).json({ success: false, message: 'User with this mobile number already exists' });
     }
     
-    // In a real app, you would hash the password here before saving it
-    // For this example, we'll store it as is for simplicity.
     const { data, error } = await supabase
       .from('users')
       .insert([
@@ -46,8 +38,8 @@ module.exports = async (req, res) => {
       return res.status(500).json({ success: false, message: 'Signup failed. Please try again.' });
     }
 
-    // Return a success message (in a real app, you would return a session token)
-    return res.status(200).json({ success: true, message: 'Signup successful!', user: data[0] });
+    const authToken = 'dummy-auth-token-12345'; // In a real app, you would return a session token
+    return res.status(200).json({ success: true, message: 'Signup successful!', user: data[0], token: authToken });
 
   } catch (error) {
     console.error('Server error:', error);
