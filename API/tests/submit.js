@@ -1,13 +1,8 @@
-// A simple Node.js serverless function for Vercel
-// This function handles test submission and saves results to Supabase.
-
 const { createClient } = require('@supabase/supabase-js');
 
-// Vercel environment variables for Supabase
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-// Initialize Supabase client
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 module.exports = async (req, res) => {
@@ -15,7 +10,6 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Extract necessary data from the request body
   const { testId, userId, score, rank, timeTaken, userAnswers } = req.body;
 
   if (!testId || !userId || score === undefined || rank === undefined) {
@@ -32,7 +26,6 @@ module.exports = async (req, res) => {
           score: score,
           rank: rank,
           time_taken_seconds: timeTaken,
-          // You could also save userAnswers and questions here if needed.
         },
       ]);
 
