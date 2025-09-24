@@ -31,9 +31,9 @@ module.exports = async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid mobile number or password.' });
     }
     
-    const authToken = 'dummy-auth-token-12345'; // In a real app, you would generate a JWT token here
-
+    const authToken = 'dummy-auth-token-12345';
     return res.status(200).json({ success: true, message: 'Login successful!', user, token: authToken });
+
   } catch (error) {
     console.error('Server error:', error);
     return res.status(500).json({ success: false, message: 'An unexpected error occurred.' });
