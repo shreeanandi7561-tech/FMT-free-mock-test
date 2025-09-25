@@ -409,7 +409,7 @@
                         <ul class="pass-benefits">
                             <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/></svg> Unlimited Mock Tests</li>
                             <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/></svg> Detailed Performance Analysis</li>
-                            <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/></svg> 24/7 Doubt Solving Section</li>
+                            <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 24/7 Doubt Solving Section</li>
                              <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/></svg> Access to All Premium Sets</li>
                         </ul>
                         <button id="purchase-pass-btn" class="btn">Activate Pass</button>
@@ -436,15 +436,35 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Back
                 </button>
                  <div class="card">
-                    <h2>Student Profile</h2>
+                    <div class="profile-header">
+                        <img class="profile-picture" src="https://via.placeholder.com/100/CCCCCC/FFFFFF?text=Profile" alt="Profile Picture">
+                        <h2 id="profile-name"></h2>
+                        <p id="profile-email"></p>
+                        <p id="pass-status"></p>
+                    </div>
                     <div id="profile-details">
-                        <p><strong>Name:</strong> <span id="profile-name"></span></p>
-                        <p><strong>Email:</strong> <span id="profile-email"></span></p>
-                        <p><strong>Pass Status:</strong> <span id="pass-status">Not Active</span></p>
-                        <p><strong>Average Rank:</strong> <span id="average-rank"></span></p>
-                        <p><strong>Average Percentage:</strong> <span id="average-percentage"></span></p>
+                        <p><strong>Mobile:</strong> <span id="profile-mobile"></span></p>
+                        <p><strong>Joined:</strong> <span id="profile-joined"></span></p>
+                    </div>
+                    <div class="stat-card">
+                        <p>Average Percentage</p><span id="average-percentage"></span>
+                    </div>
+                    <div class="stat-card" style="margin-top:1.5rem;">
+                        <p>Average Rank</p><span id="average-rank"></span>
+                    </div>
+
+                    <div class="performance-charts">
+                        <div class="chart-card">
+                            <h4>Last 5 Test Scores</h4>
+                            <canvas id="scores-chart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                             <h4>Performance by Subject</h4>
+                            <canvas id="subject-performance-chart"></canvas>
+                        </div>
                     </div>
                 </div>
+                 <button class="btn" style="margin-top: 1.5rem;" onclick="logout()">Log Out</button>
             </section>
 
             <section id="doubt-section" class="page chattutor-page-container">
@@ -680,7 +700,6 @@
     let totalTestTime = 0;
     let testStartTime = 0;
     
-    // All API endpoints to be replaced with live ones
     const TEST_API_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/tests";
     const PASS_API_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/pass";
     const MCQ_GENERATOR_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/generate-mcq";
