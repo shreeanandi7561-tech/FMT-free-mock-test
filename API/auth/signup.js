@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
     if (existingUser) {
       return res.status(409).json({ success: false, message: 'User with this mobile number already exists' });
     }
-    
+
     const { data, error } = await supabase
       .from('users')
       .insert([
