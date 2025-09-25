@@ -33,7 +33,6 @@ module.exports = async (req, res) => {
     
     const authToken = 'dummy-auth-token-12345';
     return res.status(200).json({ success: true, message: 'Login successful!', user, token: authToken });
-
   } catch (error) {
     console.error('Server error:', error);
     return res.status(500).json({ success: false, message: 'An unexpected error occurred.' });
