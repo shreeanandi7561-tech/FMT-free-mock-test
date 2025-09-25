@@ -605,45 +605,61 @@
         }
     });
 
-    signupBtn.addEventListener('click', async () => {
-        signupError.textContent = '';
-        const name = signupNameInput.value.trim();
-        const email = signupEmailInput.value.trim();
-        const mobile = signupMobileInput.value.trim();
-        const password = signupPasswordInput.value.trim();
+    signupBtn.addEventListener("click", async () => {
+  signupError.textContent = "";
+  const name = signupNameInput.value.trim();
+  const email = signupEmailInput.value.trim();
+  const mobile = signupMobileInput.value.trim();
+  const password = signupPasswordInput.value.trim();
 
-        if (!name) { signupError.textContent = "Please enter your full name."; return; }
-        if (mobile.length !== 10) { signupError.textContent = "Please enter a valid 10-digit mobile number."; return; }
-        if (password.length < 6) { signupError.textContent = "Password must be at least 6 characters long."; return; }
+  if (!name) {
+    signupError.textContent = "Please enter your full name.";
+    return;
+  }
+  if (mobile.length !== 10) {
+    signupError.textContent = "Please enter a valid 10-digit mobile number.";
+    return;
+  }
+  if (password.length < 6) {
+    signupError.textContent = "Password must be at least 6 characters long.";
+    return;
+  }
 
-        signupBtn.disabled = true;
-        signupBtn.textContent = 'Signing Up...';
+  signupBtn.disabled = true;
+  signupBtn.textContent = "Signing Up...";
 
-        try {
-            const response = await fetch(`${AUTH_API_ENDPOINT}/signup`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, mobile, password })
-            });
-            const data = await response.json();
-
-            if (data.success) {
-                localStorage.setItem('authToken', data.token);
-                currentUser = data.user;
-                hideAuthModal();
-                mainApp.style.display = 'block';
-                initializeApp();
-            } else {
-                signupError.textContent = data.message || "Sign up failed. User may already exist.";
-            }
-        } catch (error) {
-            signupError.textContent = "An error occurred. Please try again later.";
-            console.error('Signup failed:', error);
-        } finally {
-            signupBtn.disabled = false;
-            signupBtn.textContent = 'Sign Up';
-        }
+  try {
+    const response = await fetch(AUTHAPIENDPOINT + "/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, mobile, password })
     });
+    const text = await response.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      signupError.textContent = "Server error: Invalid JSON response.";
+      console.error("Signup error: Server returned invalid JSON.", text);
+      return;
+    }
+    if (data.success) {
+      localStorage.setItem("authToken", data.token);
+      currentUser = data.user;
+      hideAuthModal();
+      mainApp.style.display = "block";
+      initializeApp && initializeApp();
+    } else {
+      signupError.textContent = data.message || "Signup failed. User may already exist.";
+    }
+  } catch (error) {
+    signupError.textContent = "Network or server error! Try again.";
+    console.error("Signup failed:", error);
+  } finally {
+    signupBtn.disabled = false;
+    signupBtn.textContent = "Sign Up";
+  }
+});
     
     function logout() {
         if (confirm("Are you sure you want to log out?")) {
