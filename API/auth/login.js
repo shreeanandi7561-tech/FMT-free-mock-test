@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
     if (user.password !== password) {
       return res.status(401).json({ success: false, message: 'Invalid mobile number or password.' });
     }
-    
+
     const authToken = 'dummy-auth-token-12345';
     return res.status(200).json({ success: true, message: 'Login successful!', user, token: authToken });
   } catch (error) {
