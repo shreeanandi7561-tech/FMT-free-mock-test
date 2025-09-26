@@ -45,5 +45,15 @@ catch (error) {
   console.error('Signup error:', error);
   return res.status(500).json({ success: false, message: 'Signup failed.', error: error.message });
 }
-  
+
+
+catch (error) {
+  console.error('Signup error:', error);
+  return res.status(500).json({
+    success: false,
+    message: 'Signup failed.',
+    error: (typeof error === 'object' && error.message) ? error.message : error
+  });
+}
+                              }
 };
