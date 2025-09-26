@@ -41,4 +41,9 @@ module.exports = async (req, res) => {
     console.error('Server error:', error);
     return res.status(500).json({ success: false, message: 'An unexpected error occurred.' });
   }
+catch (error) {
+  console.error('Signup error:', error);
+  return res.status(500).json({ success: false, message: 'Signup failed.', error: error.message });
+}
+  
 };
