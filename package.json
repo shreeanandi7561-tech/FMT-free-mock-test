@@ -1,16 +1,9 @@
 {
-  "name": "api",
+  "name": "fmt-mock-test-platform",
   "version": "1.0.0",
-  "description": "Serverless functions for the mock test platform",
-  "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "dev": "python -m uvicorn api.server:app --host 0.0.0.0 --port $PORT",
+    "start": "python -m uvicorn api.server:app --host 0.0.0.0 --port $PORT"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@supabase/supabase-js": "^2.39.8",
-    "node-fetch": "^2.6.1"
-  }
+  "dependencies": {}
 }
