@@ -1,6 +1,7 @@
 {
   "name": "fmt-mock-test-platform",
   "version": "1.0.0",
+  "private": true,
   "scripts": {
     "dev": "python -m uvicorn api.server:app --host 0.0.0.0 --port $PORT",
     "start": "python -m uvicorn api.server:app --host 0.0.0.0 --port $PORT"
