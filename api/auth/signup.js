@@ -24,11 +24,13 @@ export default async function handler(req, res) {
     });
 
     if (error) {
+      console.error("SIGNUP ERROR:", error); // Vercel logs
       return res.status(400).json({ error: error.message });
     }
 
     return res.status(200).json({ user });
   } catch (e) {
+    console.error("SERVER ERROR:", e); // Vercel logs
     return res.status(500).json({ error: e.message });
   }
 }
