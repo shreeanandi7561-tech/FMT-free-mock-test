@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Professional Mock Test Platform</title>
-
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --primary-color: #4A90E2;
@@ -27,7 +28,7 @@
             --premium-color: #f39c12;
             --purple-color: #8e44ad;
         }
-
+        
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
@@ -36,11 +37,7 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-<<<<<<< HEAD
-
-=======
         
->>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
         .container { max-width: 100%; margin: 0 auto; padding-bottom: 80px; }
         header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; padding: 0.5rem 1rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 1001; }
         .header-top-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; max-width: 900px; margin: 0 auto; }
@@ -108,245 +105,6 @@
         .premium-badge { position: absolute; top: 10px; right: 10px; background-color: var(--premium-color); color: white; padding: 4px 8px; font-size: 0.8rem; font-weight: 600; border-radius: 5px; display: flex; align-items: center; gap: 4px; }
         .view-all-card { background-color: var(--background-color); border: 2px dashed var(--border-color); color: var(--primary-dark); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1.1rem; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; }
         .view-all-card:hover { background-color: #e9f2ff; border-color: var(--primary-color); }
-<<<<<<< HEAD
-
-        .login-card { max-width: 400px; margin: 5rem auto; padding: 2rem; background: var(--surface-color); border-radius: 12px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); }
-        .login-header { text-align: center; margin-bottom: 2rem; }
-        .login-header h1 { color: var(--primary-color); margin-bottom: 0.5rem; }
-        .login-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 1.5rem; }
-        .login-tab { flex: 1; text-align: center; padding: 1rem; font-weight: 600; cursor: pointer; color: var(--text-secondary); border-bottom: 2px solid transparent; transition: all 0.3s ease; }
-        .login-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        .form-group { margin-bottom: 1.2rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary); }
-        .form-group input { width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
-        .error-message { color: var(--danger-color); font-size: 0.9rem; margin-top: 0.5rem; text-align: center; }
-    </style>
-
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
-    <script>
-        // Configuration
-        const API_BASE = window.location.origin;
-        const AUTH_API = `${API_BASE}/api/auth`;
-        const TEST_API_ENDPOINT = `${API_BASE}/api`;
-        const MCQ_GENERATOR_ENDPOINT = `${API_BASE}/api/generate-mcq`;
-        const CHAT_TUTOR_ENDPOINT = `${API_BASE}/api/chat`;
-
-        // Check if user is logged in
-        function isLoggedIn() {
-            return localStorage.getItem('authToken') !== null;
-        }
-
-        // Show login form if not logged in
-        function checkAuth() {
-            if (!isLoggedIn()) {
-                document.getElementById('main-app').style.display = 'none';
-                document.getElementById('auth-modal').style.display = 'block';
-            } else {
-                document.getElementById('main-app').style.display = 'block';
-                document.getElementById('auth-modal').style.display = 'none';
-                initializeApp();
-            }
-        }
-
-        // Login function
-        async function login() {
-            const mobile = document.getElementById('login-mobile').value;
-            const password = document.getElementById('login-password').value;
-            const errorEl = document.getElementById('login-error');
-
-            try {
-                const response = await fetch(`${AUTH_API}/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ mobile, password })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    localStorage.setItem('authToken', result.token);
-                    localStorage.setItem('user', JSON.stringify(result.user));
-                    checkAuth();
-                } else {
-                    errorEl.textContent = result.message || 'Login failed';
-                }
-            } catch (e) {
-                errorEl.textContent = 'Network error. Please try again.';
-            }
-        }
-
-        // Signup function
-        async function signup() {
-            const name = document.getElementById('signup-name').value;
-            const email = document.getElementById('signup-email').value;
-            const mobile = document.getElementById('signup-mobile').value;
-            const password = document.getElementById('signup-password').value;
-            const errorEl = document.getElementById('signup-error');
-
-            try {
-                const response = await fetch(`${AUTH_API}/signup`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, mobile, password })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    localStorage.setItem('authToken', result.token);
-                    localStorage.setItem('user', JSON.stringify(result.user));
-                    checkAuth();
-                } else {
-                    errorEl.textContent = result.message || 'Signup failed';
-                }
-            } catch (e) {
-                errorEl.textContent = 'Network error. Please try again.';
-            }
-        }
-
-        // Tab switching
-        function switchTab(tabName) {
-            const tabs = document.querySelectorAll('.modal-tab');
-            const forms = document.querySelectorAll('#login-form, #signup-form');
-
-            tabs.forEach(tab => tab.classList.remove('active'));
-            forms.forEach(form => form.style.display = 'none');
-
-            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-            document.getElementById(`${tabName}-form`).style.display = 'block';
-        }
-
-        // Logout function
-        function logout() {
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('user');
-            location.reload();
-        }
-
-        async function initializeApp() {
-            console.log('App initialized');
-            // Add your existing app initialization code here
-        }
-
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            checkAuth();
-
-            // Tab switching
-            document.querySelectorAll('.modal-tab').forEach(tab => {
-                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
-            });
-
-            // Login/Signup buttons
-            document.getElementById('login-btn').addEventListener('click', login);
-            document.getElementById('signup-btn').addEventListener('click', signup);
-
-            // Enter key handling
-            document.getElementById('login-password').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') login();
-            });
-            document.getElementById('signup-password').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') signup();
-            });
-        });
-    </script>
-</head>
-<body>
-    <!-- Authentication Modal -->
-    <div id="auth-modal" class="login-card">
-        <div class="login-header">
-            <h1>Mock Test Platform</h1>
-            <p>Welcome! Please sign in to continue.</p>
-        </div>
-
-        <div class="login-tabs">
-            <div class="login-tab active" data-tab="login">Log In</div>
-            <div class="login-tab" data-tab="signup">Sign Up</div>
-        </div>
-
-        <div id="login-form">
-            <div class="form-group">
-                <label for="login-mobile">Mobile Number</label>
-                <input type="tel" id="login-mobile" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required>
-            </div>
-            <div class="form-group">
-                <label for="login-password">Password</label>
-                <input type="password" id="login-password" required>
-            </div>
-            <button class="btn" id="login-btn">Log In</button>
-            <p class="error-message" id="login-error"></p>
-        </div>
-
-        <div id="signup-form" style="display: none;">
-            <div class="form-group">
-                <label for="signup-name">Full Name</label>
-                <input type="text" id="signup-name" placeholder="Alex Doe" required>
-            </div>
-            <div class="form-group">
-                <label for="signup-email">Email (Optional)</label>
-                <input type="email" id="signup-email" placeholder="alex.doe@example.com">
-            </div>
-            <div class="form-group">
-                <label for="signup-mobile">Mobile Number</label>
-                <input type="tel" id="signup-mobile" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required>
-            </div>
-            <div class="form-group">
-                <label for="signup-password">Password</label>
-                <input type="password" id="signup-password" minlength="6" required>
-            </div>
-            <button class="btn" id="signup-btn">Sign Up</button>
-            <p class="error-message" id="signup-error"></p>
-        </div>
-    </div>
-
-    <!-- Main App (Hidden until authenticated) -->
-    <div id="main-app" style="display: none;">
-        <div class="container">
-            <header>
-                <div class="header-top-row">
-                    <button id="search-icon-btn" class="header-icon-btn" title="Search Tests">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    </button>
-                    <h1 class="header-title">Mock Test Platform</h1>
-                    <button id="filter-icon-btn" class="header-icon-btn" title="Menu">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
-                            <line x1="3" y1="12" x2="21" y2="12"></line>
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <line x1="3" y1="18" x2="21" y2="18"></line>
-                        </svg>
-                    </button>
-                </div>
-            </header>
-
-            <main>
-                <section id="home" class="page active">
-                    <div id="ad-slider-placeholder">
-                        <p>Mock Test Platform - Ready to Start!</p>
-                    </div>
-
-                    <div class="card">
-                        <h2>Welcome to Mock Test Platform!</h2>
-                        <p>Start preparing for your exams with our comprehensive mock tests.</p>
-                        <button class="btn" onclick="logout()">Logout</button>
-                    </div>
-                </section>
-            </main>
-
-            <nav>
-                <button class="nav-tab active" data-target="home">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
-                    Home
-                </button>
-                <button class="nav-tab" data-target="profile">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    Profile
-                </button>
-            </nav>
-        </div>
-    </div>
-</body>
-</html>
-=======
         #test-header { display: flex; justify-content: space-between; align-items: center; }
         #test-header .back-btn { margin-bottom: 0; }
         #timer-display { font-size: 1.2rem; font-weight: 600; color: var(--primary-dark); background-color: var(--background-color); padding: 0.5rem 1rem; border-radius: 8px; }
@@ -1923,4 +1681,3 @@
             </script>
 </body>
 </html>
->>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
