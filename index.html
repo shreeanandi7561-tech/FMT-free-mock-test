@@ -500,7 +500,8 @@
     // =======================================================
     // ========== AUTHENTICATION SCRIPT START ================
     // =======================================================
-    const AUTH_API_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/auth";
+    const BACKEND_URL = "https://fmt-free-mock-test.vercel.app";
+    const AUTH_API_ENDPOINT = `${BACKEND_URL}/api/auth`;
     let currentUser = null;
     const authModal = document.getElementById('auth-modal');
     const loginForm = document.getElementById('login-form');
@@ -525,9 +526,9 @@
         }
 
         try {
-            const response = await fetch(`${AUTH_API_ENDPOINT}/verify`, {
+            const response = await fetch(`${AUTH_API_ENDPOINT}/verify?token=${token}`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+                headers: { 'Content-Type': 'application/json' }
             });
             const data = await response.json();
 
@@ -594,7 +595,7 @@
                 mainApp.style.display = 'block';
                 initializeApp();
             } else {
-                loginError.textContent = data.message || "Login failed. Please check your credentials.";
+                loginError.textContent = data.detail || "Login failed. Please check your credentials.";
             }
         } catch (error) {
             loginError.textContent = "An error occurred. Please try again later.";
@@ -605,63 +606,55 @@
         }
     });
 
-        const AUTHAPIENDPOINT = "https://fmt-free-mock-test.vercel.app/api";
+    const AUTHAPIENDPOINT = `${BACKEND_URL}/api`;
 
     signupBtn.addEventListener("click", async () => {
-  signupError.textContent = "";
-  const name = signupNameInput.value.trim();
-  const email = signupEmailInput.value.trim();
-  const mobile = signupMobileInput.value.trim();
-  const password = signupPasswordInput.value.trim();
+        signupError.textContent = "";
+        const name = signupNameInput.value.trim();
+        const email = signupEmailInput.value.trim();
+        const mobile = signupMobileInput.value.trim();
+        const password = signupPasswordInput.value.trim();
 
-  if (!name) {
-    signupError.textContent = "Please enter your full name.";
-    return;
-  }
-  if (mobile.length !== 10) {
-    signupError.textContent = "Please enter a valid 10-digit mobile number.";
-    return;
-  }
-  if (password.length < 6) {
-    signupError.textContent = "Password must be at least 6 characters long.";
-    return;
-  }
+        if (!name) {
+            signupError.textContent = "Please enter your full name.";
+            return;
+        }
+        if (mobile.length !== 10) {
+            signupError.textContent = "Please enter a valid 10-digit mobile number.";
+            return;
+        }
+        if (password.length < 6) {
+            signupError.textContent = "Password must be at least 6 characters long.";
+            return;
+        }
 
-  signupBtn.disabled = true;
-  signupBtn.textContent = "Signing Up...";
+        signupBtn.disabled = true;
+        signupBtn.textContent = "Signing Up...";
 
-  try {
-    const response = await fetch(AUTHAPIENDPOINT + "/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, mobile, password })
+        try {
+            const response = await fetch(`${AUTHAPIENDPOINT}/auth/signup`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, mobile, password })
+            });
+            const data = await response.json();
+            if (data.success) {
+                localStorage.setItem("authToken", data.token);
+                currentUser = data.user;
+                hideAuthModal();
+                mainApp.style.display = "block";
+                initializeApp();
+            } else {
+                signupError.textContent = data.detail || "Signup failed. User may already exist.";
+            }
+        } catch (error) {
+            signupError.textContent = "Network or server error! Try again.";
+            console.error("Signup failed:", error);
+        } finally {
+            signupBtn.disabled = false;
+            signupBtn.textContent = "Sign Up";
+        }
     });
-    const text = await response.text();
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (e) {
-      signupError.textContent = "Server error: Invalid JSON response.";
-      console.error("Signup error: Server returned invalid JSON.", text);
-      return;
-    }
-    if (data.success) {
-      localStorage.setItem("authToken", data.token);
-      currentUser = data.user;
-      hideAuthModal();
-      mainApp.style.display = "block";
-      initializeApp && initializeApp();
-    } else {
-      signupError.textContent = data.message || "Signup failed. User may already exist.";
-    }
-  } catch (error) {
-    signupError.textContent = "Network or server error! Try again.";
-    console.error("Signup failed:", error);
-  } finally {
-    signupBtn.disabled = false;
-    signupBtn.textContent = "Sign Up";
-  }
-});
     
     function logout() {
         if (confirm("Are you sure you want to log out?")) {
@@ -718,10 +711,10 @@
     let totalTestTime = 0;
     let testStartTime = 0;
     
-    const TEST_API_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/tests";
-    const PASS_API_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/pass";
-    const MCQ_GENERATOR_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/generate-mcq";
-    const CHAT_TUTOR_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/chat";
+    const TEST_API_ENDPOINT = `${BACKEND_URL}/api/tests`;
+    const PASS_API_ENDPOINT = `${BACKEND_URL}/api/pass`;
+    const MCQ_GENERATOR_ENDPOINT = `${BACKEND_URL}/api/generate-mcq`;
+    const CHAT_TUTOR_ENDPOINT = `${BACKEND_URL}/api/chat`;
 
     let allTests = {};
     let allQuestions = {};
@@ -771,7 +764,7 @@
         try {
             const response = await fetch(`${PASS_API_ENDPOINT}/activate`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('authToken')}` },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ code })
             });
             const data = await response.json();
@@ -1149,8 +1142,9 @@
         currentTestName = testName;
         currentTestId = testId;
         try {
-            const questionsResponse = await fetch(`${TEST_API_ENDPOINT}/questions/${testId}`);
-            questions = await questionsResponse.json();
+            const questionsResponse = await fetch(`${TEST_API_ENDPOINT}/questions`);
+            const allQuestionsFromApi = await questionsResponse.json();
+            questions = allQuestionsFromApi[testId];
         } catch (e) {
             console.error('Failed to fetch questions from API. Using local fallback.');
             questions = allQuestions[testId];
@@ -1429,17 +1423,18 @@
     }
     
     async function callLiveMCQGenerator(text, count, language) {
+        const formData = new FormData();
+        formData.append('file', new Blob([text], { type: 'text/plain' }), 'text_content.txt');
+        formData.append('count', count);
+        formData.append('language', language);
+        
         const response = await fetch(MCQ_GENERATOR_ENDPOINT, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-            },
-            body: JSON.stringify({ text, count, language })
+            body: formData,
         });
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || "Failed to generate MCQs from API.");
+            throw new Error(errorData.detail || "Failed to generate MCQs from API.");
         }
         return response.json();
     }
@@ -1452,6 +1447,7 @@
             const fileInput = document.getElementById("fileInput");
             if (!fileInput.files || !fileInput.files.length) throw new Error("No file selected");
             const file = fileInput.files[0];
+
             if (!fullText) {
                 try {
                     fullText = await extractTextFromFile(file);
@@ -1468,11 +1464,12 @@
                 alert("✅ All content from the document has been processed.");
                 return;
             }
-            let count = parseInt(document.getElementById("mcqCount").value, 10);
+
+            const count = parseInt(document.getElementById("mcqCount").value, 10);
             const language = document.getElementById("language").value;
             const chunk = fullText.slice(usedChars, Math.min(usedChars + CHUNK_SIZE, fullText.length));
             usedChars += chunk.length;
-
+            
             let mcqResult;
             try {
                 document.getElementById("debugRaw").textContent = "Requesting MCQs from AI...";
@@ -1482,7 +1479,7 @@
                 return;
             }
             
-            const got = mcqResult.mcqs ? mcqResult.mcqs.length : 0;
+            const got = mcqResult.data && mcqResult.data.questions ? mcqResult.data.questions.length : 0;
             if (got === 0) {
                 document.getElementById("resultArea").textContent = `Could not generate MCQs from this chunk.`;
                 return;
@@ -1496,7 +1493,7 @@
                 language,
                 requested: count,
                 generated: got,
-                mcqs: mcqResult.mcqs || []
+                mcqs: mcqResult.data.questions || []
             };
             existingSets.push(newSet);
             localStorage.setItem(setsKey, JSON.stringify(existingSets));
@@ -1624,7 +1621,7 @@
                     } else {
                         finalMessage = `Text extracted from image: "${extractedText}"\n\nPlease respond to this.`;
                     }
-                    imageBase64 = selectedImage.dataUrl;
+                    imageBase64 = selectedImage.dataUrl.split(',')[1];
                 } else if (!text) {
                     finalMessage = "I've uploaded an image but couldn't extract text from it. Please describe what you need help with.";
                 }
@@ -1649,7 +1646,7 @@
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                 },
-                body: JSON.stringify({ message: finalMessage, image: imageBase64 })
+                body: JSON.stringify({ message: finalMessage, image_data: imageBase64 })
             });
             const data = await response.json();
             addAIMessage(data.response);
