@@ -68,7 +68,11 @@ class TestResult(BaseModel):
     user_answers: List[str]
     time_taken: int
     score: int
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
 def get_user_id_from_token(token: str = Depends(lambda x: x.headers.get('Authorization'))):
     if not token or not token.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Authorization header missing or invalid")
@@ -98,6 +102,7 @@ async def login(credentials: UserLogin):
     try:
         # Query user from Supabase
         response = supabase.table('users').select('*').eq('mobile', credentials.mobile).execute()
+<<<<<<< HEAD
 
         if not response.data:
             raise HTTPException(status_code=401, detail="Invalid mobile number or password")
@@ -111,6 +116,21 @@ async def login(credentials: UserLogin):
         # Generate auth token
         auth_token = generate_auth_token(str(user['id']))
 
+=======
+        
+        if not response.data:
+            raise HTTPException(status_code=401, detail="Invalid mobile number or password")
+        
+        user = response.data[0]
+        
+        # Simple password check (in production, use proper hashing)
+        if user['password'] != credentials.password:
+            raise HTTPException(status_code=401, detail="Invalid mobile number or password")
+        
+        # Generate auth token
+        auth_token = generate_auth_token(str(user['id']))
+        
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
         return {
             "success": True,
             "message": "Login successful",
@@ -132,10 +152,17 @@ async def signup(user_data: UserSignup):
     try:
         # Check if user already exists
         existing_user = supabase.table('users').select('mobile').eq('mobile', user_data.mobile).execute()
+<<<<<<< HEAD
 
         if existing_user.data:
             raise HTTPException(status_code=409, detail="User with this mobile number already exists")
 
+=======
+        
+        if existing_user.data:
+            raise HTTPException(status_code=409, detail="User with this mobile number already exists")
+        
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
         # Create new user
         new_user = {
             "name": user_data.name,
@@ -143,6 +170,7 @@ async def signup(user_data: UserSignup):
             "mobile": user_data.mobile,
             "password": user_data.password # In production, hash this
         }
+<<<<<<< HEAD
 
         response = supabase.table('users').insert(new_user).execute()
 
@@ -150,6 +178,15 @@ async def signup(user_data: UserSignup):
             user = response.data[0]
             auth_token = generate_auth_token(str(user['id']))
 
+=======
+        
+        response = supabase.table('users').insert(new_user).execute()
+        
+        if response.data:
+            user = response.data[0]
+            auth_token = generate_auth_token(str(user['id']))
+            
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
             return {
                 "success": True,
                 "message": "Signup successful",
@@ -164,7 +201,11 @@ async def signup(user_data: UserSignup):
             }
         else:
             raise HTTPException(status_code=500, detail="Failed to create user")
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
     except HTTPException:
         raise
     except Exception as e:
@@ -176,7 +217,11 @@ async def verify_token(token: str):
     user_id = verify_auth_token(token)
     if not user_id:
         raise HTTPException(status_code=401, detail="Invalid token")
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
     try:
         response = supabase.table('users').select('*').eq('id', user_id).execute()
         if response.data:
@@ -233,7 +278,11 @@ async def get_test_questions():
                 Key='MATH 2March 2025 9 Baje.json'
             )
             cloudflare_data = json.loads(response['Body'].read().decode('utf-8'))
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
             # Process Cloudflare data and return
             questions_data = {
                 "math_march_2025": cloudflare_data
@@ -251,7 +300,11 @@ async def get_test_questions():
                     {"question": "Which planet is known as the Red Planet?", "options": ["Earth", "Mars", "Jupiter", "Venus"], "answer": "Mars"}
                 ]
             }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
         return questions_data
     except Exception as e:
         logging.error(f"Get questions error: {e}")
@@ -278,7 +331,11 @@ async def get_test_history(user_id: str = Depends(get_user_id_from_token)):
     try:
         response = supabase.table('test_results').select('*').eq('user_id', user_id).order('created_at', desc=True).limit(10).execute()
         history_data = response.data
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
         # Mock up rank and percentage for now
         formatted_history = []
         for test in history_data:
@@ -300,7 +357,11 @@ async def generate_mcq(file: UploadFile = File(...), count: int = Form(20), lang
         # Read file content
         content = await file.read()
         text_content = content.decode("utf-8", errors="ignore")
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
         # Generate MCQs using Gemini AI
         prompt = f"""
         Based on the following content, generate {count} multiple choice questions in {language} language.
@@ -310,6 +371,7 @@ async def generate_mcq(file: UploadFile = File(...), count: int = Form(20), lang
             "options": ["Option A", "Option B", "Option C", "Option D"],
             "answer": "Correct option text"
         }}
+<<<<<<< HEAD
 
         Content: {text_content[:3000]} # Limit content to avoid token limits
 
@@ -318,6 +380,16 @@ async def generate_mcq(file: UploadFile = File(...), count: int = Form(20), lang
 
         response = gemini_model.generate_content(prompt)
 
+=======
+        
+        Content: {text_content[:3000]} # Limit content to avoid token limits
+        
+        Return only a valid JSON array of questions.
+        """
+        
+        response = gemini_model.generate_content(prompt)
+        
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
         # Parse the response
         try:
             mcq_data = json.loads(response.text)
@@ -328,7 +400,11 @@ async def generate_mcq(file: UploadFile = File(...), count: int = Form(20), lang
                 "createdAt": datetime.utcnow().isoformat(),
                 "questions": mcq_data
             }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
             return {
                 "success": True,
                 "message": f"Generated {len(mcq_data)} MCQs successfully",
@@ -346,7 +422,11 @@ async def generate_mcq(file: UploadFile = File(...), count: int = Form(20), lang
                     "raw_response": response.text
                 }
             }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
     except Exception as e:
         logging.error(f"MCQ generation error: {e}")
         raise HTTPException(status_code=500, detail=f"MCQ generation failed: {str(e)}")
@@ -359,7 +439,11 @@ async def chat_with_tutor(message_data: ChatMessage):
         parts = [
             f"You are a helpful and professional tutor. Please answer the student's question."
         ]
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
         if message_data.image_data:
             try:
                 img_data = base64.b64decode(message_data.image_data)
@@ -377,7 +461,11 @@ async def chat_with_tutor(message_data: ChatMessage):
 
         # Generate response using Gemini
         response = gemini_model.generate_content(parts)
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
         return {
             "success": True,
             "response": response.text
@@ -428,4 +516,8 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     import uvicorn
+<<<<<<< HEAD
     uvicorn.run(app, host="0.0.0.0", port=8001)
+=======
+    uvicorn.run(app, host="0.0.0.0", port=8001)
+>>>>>>> ecd20435864b0cd78765d428ffbf5eeee792752e
