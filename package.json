@@ -1,0 +1,12 @@
+{
+  "name": "fmt-free-mock-test",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "vercel dev",
+    "build": "echo 'No build step needed for static site'"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0"
+  }
+}
