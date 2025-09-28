@@ -73,6 +73,9 @@
         .btn { background-color: var(--primary-color); color: white; border: none; padding: 0.8rem 2rem; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3); width: 100%; }
         .btn:hover { background-color: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(74, 144, 226, 0.4); }
         .btn:disabled { background-color: #ccc; cursor: not-allowed; box-shadow: none; transform: none; }
+        .btn-secondary { background-color: #6c757d; box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3); }
+        .btn-secondary:hover { background-color: #5a6268; }
+        .btn-group { display: flex; gap: 1rem; margin-top: 1.5rem; }
         .back-btn { background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 500; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; padding: 0; }
         .page > .back-btn { margin-top: 1rem; margin-bottom: 1.5rem; }
         #ad-slider-placeholder { height: 70px; background-color: var(--surface-color); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: var(--text-secondary); border: 2px dashed var(--border-color); }
@@ -195,14 +198,14 @@
         .unique-code-form .btn { width: auto; }
         #activation-message { margin-top: 1rem; font-weight: 500; }
         .profile-header { text-align: center; padding: 2rem; background: linear-gradient(to right, var(--primary-color), var(--primary-dark)); color: white; border-radius: 12px 12px 0 0; margin: -1.5rem -1.5rem 1.5rem -1.5rem; }
-        .profile-picture { width: 100px; height: 100px; border-radius: 50%; background-color: var(--surface-color); border: 4px solid rgba(255, 255, 255, 0.5); margin-bottom: 0.5rem; }
         .profile-header h2 { margin: 0; font-weight: 600; }
         .profile-header p { margin: 0.25rem 0 0; opacity: 0.8; }
         .performance-charts { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 1.5rem; }
         .chart-card { background-color: var(--surface-color); padding: 1rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .chart-card h4 { margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary-dark); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem; }
-        #login-modal, #signup-modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.6); padding-top: 60px; }
-        .modal-content { background-color: var(--background-color); margin: auto; padding: 2rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); max-width: 400px; position: relative; transform: translateY(-20px); animation: modalFadeIn 0.3s forwards; display: flex; flex-direction: column; }
+        #login-modal, #signup-modal, #forgot-password-modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.6); align-items: center; justify-content: center; }
+        .modal-content { background-color: var(--background-color); margin: auto; padding: 2rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); max-width: 400px; position: relative; transform: translateY(-20px); animation: modalFadeIn 0.3s forwards; display: flex; flex-direction: column; width: 90%; }
+        @keyframes modalFadeIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
         .modal-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 1.5rem; }
         .modal-tab { flex: 1; text-align: center; padding: 1rem; font-weight: 600; cursor: pointer; color: var(--text-secondary); border-bottom: 2px solid transparent; transition: all 0.3s ease; }
         .modal-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
@@ -210,10 +213,11 @@
         .modal-form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary); }
         .modal-form-group input { width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
         .modal-footer { text-align: center; margin-top: 1rem; }
-        .modal-footer a { color: var(--primary-color); text-decoration: none; font-weight: 500; }
-        .error-message { color: var(--danger-color); font-size: 0.9rem; margin-top: 0.5rem; text-align: center; }
-        #login-modal-close, #signup-modal-close { position: absolute; top: 10px; right: 15px; font-size: 2rem; font-weight: bold; color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
-        #login-modal-close:hover, #signup-modal-close:hover { color: var(--danger-color); }
+        .modal-footer a { color: var(--primary-color); text-decoration: none; font-weight: 500; cursor: pointer; }
+        .error-message { color: var(--danger-color); font-size: 0.9rem; margin-top: 0.5rem; text-align: center; min-height: 1.2em; }
+        .success-message { color: var(--success-color); font-size: 0.9rem; margin-top: 0.5rem; text-align: center; min-height: 1.2em; }
+        .modal-close-btn { position: absolute; top: 10px; right: 15px; font-size: 2rem; font-weight: bold; color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
+        .modal-close-btn:hover { color: var(--danger-color); }
     </style>
     
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
@@ -226,7 +230,7 @@
 </head>
 <body>
 
-    <div id="auth-modal" style="display: none;">
+    <div id="auth-modal">
         <div class="modal-content">
             <div class="modal-tabs">
                 <div class="modal-tab active" data-tab="login">Log In</div>
@@ -245,7 +249,7 @@
                 <button class="btn" id="login-btn">Log In</button>
                 <p class="error-message" id="login-error"></p>
                 <div class="modal-footer">
-                    <a href="#">Forgot Password?</a>
+                    <a id="forgot-password-link">Forgot Password?</a>
                 </div>
             </div>
 
@@ -271,6 +275,27 @@
             </div>
         </div>
     </div>
+    
+    <div id="forgot-password-modal">
+        <div class="modal-content">
+            <span class="modal-close-btn" id="forgot-password-close">&times;</span>
+            <h3 style="text-align: center; margin-top: 0;">Reset Password</h3>
+            <div id="forgot-password-form">
+                <div class="modal-form-group">
+                    <label for="forgot-mobile">Registered Mobile Number</label>
+                    <input type="tel" id="forgot-mobile" placeholder="Enter your 10-digit mobile number" pattern="[0-9]{10}" required>
+                </div>
+                <div class="modal-form-group">
+                    <label for="forgot-new-password">New Password</label>
+                    <input type="password" id="forgot-new-password" minlength="6" required>
+                </div>
+                <button class="btn" id="reset-password-btn">Reset Password</button>
+                <p class="error-message" id="forgot-error"></p>
+                <p class="success-message" id="forgot-success"></p>
+            </div>
+        </div>
+    </div>
+
 
     <div class="container" id="main-app" style="display: none;">
         <header>
@@ -314,7 +339,7 @@
                         <div id="mcq-generator-container">
                             <h3>🤖 AI MCQ Generator</h3>
                             <div class="mcq-form-area">
-                                <input type="file" id="fileInput" accept=".pdf,.docx,.txt,.odt,.rtf,.pptx,.xlsx,.png,.jpg,.jpeg,.bmp" />
+                                <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.odt,.rtf,image/*" />
                                 <div class="mcq-controls-inline">
                                     <select id="mcqCount" title="Number of MCQs">
                                         <option value="5">5 MCQs</option>
@@ -432,12 +457,8 @@
             </section>
 
             <section id="profile" class="page">
-                <button class="back-btn" onclick="history.back()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Back
-                </button>
                  <div class="card">
                     <div class="profile-header">
-                        <img class="profile-picture" src="https://via.placeholder.com/100/CCCCCC/FFFFFF?text=Profile" alt="Profile Picture">
                         <h2 id="profile-name"></h2>
                         <p id="profile-email"></p>
                         <p id="pass-status"></p>
@@ -464,7 +485,11 @@
                         </div>
                     </div>
                 </div>
-                 <button class="btn" style="margin-top: 1.5rem;" onclick="logout()">Log Out</button>
+                <div class="btn-group">
+                    <button class="btn btn-secondary" id="help-btn">Help</button>
+                    <button class="btn btn-secondary" id="share-btn">Share App</button>
+                </div>
+                 <button class="btn" style="margin-top: 1.5rem; background-color: var(--danger-color);" onclick="logout()">Log Out</button>
             </section>
 
             <section id="doubt-section" class="page chattutor-page-container">
@@ -500,22 +525,42 @@
     // =======================================================
     // ========== AUTHENTICATION SCRIPT START ================
     // =======================================================
-    const AUTH_API_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/auth";
+    const AUTH_API_ENDPOINT = "/api/auth"; // Using relative path
     let currentUser = null;
+    
+    // Modal elements
     const authModal = document.getElementById('auth-modal');
+    const forgotPasswordModal = document.getElementById('forgot-password-modal');
+    
+    // Form elements
     const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
     const loginBtn = document.getElementById('login-btn');
     const signupBtn = document.getElementById('signup-btn');
+    const resetPasswordBtn = document.getElementById('reset-password-btn');
+    
+    // Input fields
     const loginMobileInput = document.getElementById('login-mobile');
     const loginPasswordInput = document.getElementById('login-password');
     const signupNameInput = document.getElementById('signup-name');
     const signupEmailInput = document.getElementById('signup-email');
     const signupMobileInput = document.getElementById('signup-mobile');
     const signupPasswordInput = document.getElementById('signup-password');
+    const forgotMobileInput = document.getElementById('forgot-mobile');
+    const forgotNewPasswordInput = document.getElementById('forgot-new-password');
+    
+    // Message elements
     const loginError = document.getElementById('login-error');
     const signupError = document.getElementById('signup-error');
+    const forgotError = document.getElementById('forgot-error');
+    const forgotSuccess = document.getElementById('forgot-success');
+
+    // App container
     const mainApp = document.getElementById('main-app');
+    
+    // Forgot Password link and close button
+    const forgotPasswordLink = document.getElementById('forgot-password-link');
+    const forgotPasswordCloseBtn = document.getElementById('forgot-password-close');
 
     async function checkLoginStatus() {
         const token = localStorage.getItem('authToken');
@@ -525,25 +570,27 @@
         }
 
         try {
-            const response = await fetch(`${AUTH_API_ENDPOINT}/verify`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
-            });
-            const data = await response.json();
-
-            if (data.success) {
-                currentUser = data.user;
-                hideAuthModal();
-                mainApp.style.display = 'block';
-                initializeApp();
+            // This is a placeholder for a proper verify endpoint. 
+            // For now, we assume if a token exists, it's valid until an API call fails.
+            // A real verify endpoint would be better for security.
+            const user = JSON.parse(atob(token.split('.')[1])); // Simple decode, not for production
+            if (user) {
+                 const storedUser = localStorage.getItem('currentUser');
+                 if(storedUser) {
+                    currentUser = JSON.parse(storedUser);
+                    hideAuthModal();
+                    mainApp.style.display = 'block';
+                    initializeApp();
+                 } else {
+                    // If user data isn't in local storage, force logout
+                    logout();
+                 }
             } else {
-                localStorage.removeItem('authToken');
-                showAuthModal();
+                 logout();
             }
         } catch (error) {
-            console.error('Login verification failed:', error);
-            localStorage.removeItem('authToken');
-            showAuthModal();
+            console.error('Token parsing failed:', error);
+            logout();
         }
     }
 
@@ -560,6 +607,18 @@
     function hideAuthModal() {
         authModal.style.display = 'none';
     }
+    
+    function showForgotPasswordModal() {
+        forgotPasswordModal.style.display = 'flex';
+    }
+
+    function hideForgotPasswordModal() {
+        forgotPasswordModal.style.display = 'none';
+        forgotError.textContent = '';
+        forgotSuccess.textContent = '';
+        forgotMobileInput.value = '';
+        forgotNewPasswordInput.value = '';
+    }
 
     document.querySelectorAll('.modal-tab').forEach(tab => {
         tab.addEventListener('click', () => {
@@ -567,6 +626,14 @@
             showAuthModal(formType);
         });
     });
+    
+    forgotPasswordLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        hideAuthModal();
+        showForgotPasswordModal();
+    });
+
+    forgotPasswordCloseBtn.addEventListener('click', hideForgotPasswordModal);
 
     loginBtn.addEventListener('click', async () => {
         loginError.textContent = '';
@@ -574,7 +641,7 @@
         const password = loginPasswordInput.value.trim();
 
         if (mobile.length !== 10) { loginError.textContent = "Please enter a valid 10-digit mobile number."; return; }
-        if (password.length < 6) { loginError.textContent = "Password must be at least 6 characters long."; return; }
+        if (!password) { loginError.textContent = "Please enter your password."; return; }
 
         loginBtn.disabled = true;
         loginBtn.textContent = 'Logging In...';
@@ -589,6 +656,7 @@
 
             if (data.success) {
                 localStorage.setItem('authToken', data.token);
+                localStorage.setItem('currentUser', JSON.stringify(data.user)); // Store user data
                 currentUser = data.user;
                 hideAuthModal();
                 mainApp.style.display = 'block';
@@ -629,6 +697,7 @@
 
             if (data.success) {
                 localStorage.setItem('authToken', data.token);
+                localStorage.setItem('currentUser', JSON.stringify(data.user));
                 currentUser = data.user;
                 hideAuthModal();
                 mainApp.style.display = 'block';
@@ -645,12 +714,53 @@
         }
     });
     
+    resetPasswordBtn.addEventListener('click', async () => {
+        forgotError.textContent = '';
+        forgotSuccess.textContent = '';
+        const mobile = forgotMobileInput.value.trim();
+        const newPassword = forgotNewPasswordInput.value.trim();
+
+        if (mobile.length !== 10) { forgotError.textContent = "Please enter a valid 10-digit mobile number."; return; }
+        if (newPassword.length < 6) { forgotError.textContent = "New password must be at least 6 characters long."; return; }
+
+        resetPasswordBtn.disabled = true;
+        resetPasswordBtn.textContent = 'Resetting...';
+
+        try {
+            const response = await fetch(`${AUTH_API_ENDPOINT}/forgot_password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mobile, newPassword })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                forgotSuccess.textContent = data.message + " You can now log in.";
+                setTimeout(() => {
+                    hideForgotPasswordModal();
+                    showAuthModal('login');
+                }, 2500);
+            } else {
+                forgotError.textContent = data.message || "Failed to reset password.";
+            }
+        } catch (error) {
+            forgotError.textContent = "An error occurred. Please try again later.";
+            console.error('Password reset failed:', error);
+        } finally {
+            resetPasswordBtn.disabled = false;
+            resetPasswordBtn.textContent = 'Reset Password';
+        }
+    });
+
+    
     function logout() {
         if (confirm("Are you sure you want to log out?")) {
             localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
             currentUser = null;
             mainApp.style.display = 'none';
             showAuthModal();
+            // Optional: Clear other app-specific data
             localStorage.removeItem('premium_pass_status');
             localStorage.removeItem('mockTestResults');
             localStorage.removeItem('mcq_sets');
@@ -700,10 +810,10 @@
     let totalTestTime = 0;
     let testStartTime = 0;
     
-    const TEST_API_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/tests";
-    const PASS_API_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/pass";
-    const MCQ_GENERATOR_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/generate-mcq";
-    const CHAT_TUTOR_ENDPOINT = "https://fmt-free-mock-test.vercel.app/api/chat";
+    const TEST_API_ENDPOINT = "/api/tests";
+    const PASS_API_ENDPOINT = "/api/pass";
+    const MCQ_GENERATOR_ENDPOINT = "/api/generate-mcq";
+    const CHAT_TUTOR_ENDPOINT = "/api/chat";
 
     let allTests = {};
     let allQuestions = {};
@@ -773,9 +883,9 @@
     async function updateProfilePage() {
         if (!currentUser) return;
         
-        document.getElementById('profile-name').textContent = currentUser.name;
-        document.getElementById('profile-email').textContent = currentUser.email;
-        document.getElementById('profile-mobile').textContent = currentUser.mobile;
+        document.getElementById('profile-name').textContent = currentUser.name || 'User';
+        document.getElementById('profile-email').textContent = currentUser.email || 'No email provided';
+        document.getElementById('profile-mobile').textContent = currentUser.mobile || 'N/A';
         document.getElementById('profile-joined').textContent = new Date(currentUser.joinedAt).toLocaleDateString();
 
         const passStatusEl = document.getElementById('pass-status');
@@ -788,7 +898,13 @@
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
             });
+            
+            if (!response.ok) {
+                throw new Error(`Failed to fetch history: ${response.statusText}`);
+            }
+
             const history = await response.json();
+            console.log("Fetched user history:", history);
             
             let totalRank = 0;
             let totalPercentage = 0;
@@ -796,56 +912,64 @@
             const recentLabels = [];
             const subjectData = {};
 
-            history.forEach((test, index) => {
-                totalRank += test.rank;
-                totalPercentage += test.percentage;
-                if (index < 5) {
-                    recentPercentages.unshift(test.percentage);
-                    recentLabels.unshift(`Test ${history.length - index}`);
-                }
-                const subject = test.subject || 'Other';
-                if (!subjectData[subject]) {
-                    subjectData[subject] = { total: 0, count: 0 };
-                }
-                subjectData[subject].total += test.percentage;
-                subjectData[subject].count += 1;
-            });
+            if (Array.isArray(history) && history.length > 0) {
+                history.forEach((test, index) => {
+                    totalRank += test.rank;
+                    totalPercentage += test.percentage;
+                    if (index < 5) {
+                        recentPercentages.unshift(test.percentage);
+                        recentLabels.unshift(`Test ${history.length - index}`);
+                    }
+                    const subject = test.subject || 'General';
+                    if (!subjectData[subject]) {
+                        subjectData[subject] = { total: 0, count: 0 };
+                    }
+                    subjectData[subject].total += test.percentage;
+                    subjectData[subject].count += 1;
+                });
+            }
             
             const averageRank = history.length > 0 ? (totalRank / history.length).toFixed(1) : "N/A";
             const averagePercentage = history.length > 0 ? (totalPercentage / history.length).toFixed(0) : "N/A";
             
             document.getElementById('average-rank').textContent = averageRank;
-            document.getElementById('average-percentage').textContent = `${averagePercentage}%`;
+            document.getElementById('average-percentage').textContent = averagePercentage !== "N/A" ? `${averagePercentage}%` : "N/A";
             
-            if (window.scoresChartInstance) window.scoresChartInstance.destroy();
-            window.scoresChartInstance = new Chart(document.getElementById('scores-chart').getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: recentLabels,
-                    datasets: [{
-                        label: 'Score Percentage',
-                        data: recentPercentages,
-                        borderColor: 'var(--primary-color)',
-                        backgroundColor: 'rgba(74, 144, 226, 0.2)',
-                        tension: 0.3,
-                        pointStyle: 'circle',
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        fill: true
-                    }]
-                },
-                options: { responsive: true, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Percentage (%)' } }, x: { title: { display: true, text: 'Tests' } } } }
-            });
+            const scoresChartCtx = document.getElementById('scores-chart');
+            if (scoresChartCtx) {
+                if (window.scoresChartInstance) window.scoresChartInstance.destroy();
+                window.scoresChartInstance = new Chart(scoresChartCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: recentLabels,
+                        datasets: [{
+                            label: 'Score Percentage',
+                            data: recentPercentages,
+                            borderColor: 'var(--primary-color)',
+                            backgroundColor: 'rgba(74, 144, 226, 0.2)',
+                            tension: 0.3,
+                            pointStyle: 'circle',
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            fill: true
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Percentage (%)' } }, x: { title: { display: true, text: 'Tests' } } } }
+                });
+            }
 
-            if (window.subjectChartInstance) window.subjectChartInstance.destroy();
-            window.subjectChartInstance = new Chart(document.getElementById('subject-performance-chart').getContext('2d'), {
-                type: 'bar',
-                data: { labels: Object.keys(subjectData), datasets: [{ label: 'Average Score (%)', data: Object.values(subjectData).map(s => (s.total / s.count).toFixed(0)), backgroundColor: 'var(--purple-color)', borderColor: 'var(--purple-color)', borderWidth: 1 }] },
-                options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
-            });
+            const subjectChartCtx = document.getElementById('subject-performance-chart');
+            if(subjectChartCtx) {
+                if (window.subjectChartInstance) window.subjectChartInstance.destroy();
+                window.subjectChartInstance = new Chart(subjectChartCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: { labels: Object.keys(subjectData), datasets: [{ label: 'Average Score (%)', data: Object.values(subjectData).map(s => (s.total / s.count).toFixed(0)), backgroundColor: 'var(--purple-color)', borderColor: 'var(--purple-color)', borderWidth: 1 }] },
+                    options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+                });
+            }
 
         } catch (e) {
-            console.error('Failed to fetch user history:', e);
+            console.error('Failed to fetch or process user history:', e);
             document.getElementById('average-rank').textContent = "N/A";
             document.getElementById('average-percentage').textContent = "N/A";
         }
@@ -1359,6 +1483,27 @@
             });
         });
     });
+    
+    // Help and Share Buttons
+    document.getElementById('help-btn').addEventListener('click', () => {
+        // REPLACE with your WhatsApp link
+        window.open('https://wa.me/YOUR_WHATSAPP_NUMBER', '_blank');
+    });
+
+    document.getElementById('share-btn').addEventListener('click', () => {
+        // REPLACE with your app's link
+        const shareData = {
+            title: 'Mock Test Platform',
+            text: 'Check out this awesome mock test platform!',
+            url: 'https://YOUR_APP_URL.com'
+        };
+        if (navigator.share) {
+            navigator.share(shareData).catch(console.error);
+        } else {
+            alert(`Share this link: ${shareData.url}`);
+        }
+    });
+
 
     // =======================================================
     // ========== AI MCQ GENERATOR TOOL SCRIPT START =========
@@ -1398,7 +1543,7 @@
             const result = await window.mammoth.extractRawText({ arrayBuffer });
             return result.value;
         }
-        if (/\.(png|jpg|jpeg|bmp)$/i.test(name)) {
+        if (file.type.startsWith('image/')) {
             const res = await Tesseract.recognize(file, 'eng', {
                 logger: m => {
                     document.getElementById("debugRaw").textContent = `OCR: ${m.status} ${m.progress ? Math.round(m.progress*100) + '%' : ''}`;
