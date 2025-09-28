@@ -1,12 +1,27 @@
 {
   "version": 2,
   "builds": [
-    { "src": "index.html", "use": "@vercel/static" },
-    { "src": "api/auth/signup.js", "use": "@vercel/node" },
-    { "src": "api/auth/login.js", "use": "@vercel/node" }
+    { 
+      "src": "index.html", 
+      "use": "@vercel/static" 
+    },
+    { 
+      "src": "api/auth/*.js", 
+      "use": "@vercel/node" 
+    }
   ],
   "routes": [
-    { "src": "/api/auth/signup", "dest": "/api/auth/signup.js" },
-    { "src": "/api/auth/login", "dest": "/api/auth/login.js" }
+    { 
+      "src": "/api/auth/signup", 
+      "dest": "/api/auth/signup.js" 
+    },
+    { 
+      "src": "/api/auth/login", 
+      "dest": "/api/auth/login.js" 
+    },
+    { 
+      "src": "/(.*)", 
+      "dest": "/index.html" 
+    }
   ]
 }
