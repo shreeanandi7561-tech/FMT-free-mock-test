@@ -70,7 +70,7 @@
         h2 { font-weight: 600; margin-top: 0; }
         .test-section h2 { font-size: 1.4rem; margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--primary-color); color: var(--primary-dark); }
         .test-section:first-child h2 { margin-top: 0; }
-        .btn { background-color: var(--primary-color); color: white; border: none; padding: 0.8rem 2rem; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3); width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .btn { background-color: var(--primary-color); color: white; border: none; padding: 0.8rem 2rem; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3); width: 100%; }
         .btn:hover { background-color: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(74, 144, 226, 0.4); }
         .btn:disabled { background-color: #ccc; cursor: not-allowed; box-shadow: none; transform: none; }
         .back-btn { background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 500; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; padding: 0; }
@@ -92,7 +92,7 @@
         #mcq-generator-container .btn-secondary { background-color: var(--surface-color); color: var(--primary-color); border: 1px solid var(--primary-color); box-shadow: none; }
         #mcq-generator-container .btn-secondary:hover { background-color: #e9f2ff; }
         #loading { display: none; color: var(--primary-dark); font-weight: 600; margin-top: 1rem; }
-        #errorBox { display: none; white-space: pre-wrap; color: var(--danger-color); margin-top: 1rem; background-color: var(--danger-light); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--danger-color); }
+        #errorBox { white-space: pre-wrap; color: var(--danger-color); margin-top: 1rem; background-color: var(--danger-light); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--danger-color); }
         .test-set-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
         .test-set-card { background: var(--surface-color); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07); text-align: center; position: relative; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
         .test-set-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
@@ -154,20 +154,9 @@
         #correct-answers li { background-color: var(--success-light); border-color: var(--success-color); }
         #wrong-answers li { background-color: var(--danger-light); border-color: var(--danger-color); }
         #unattempted-questions li { background-color: var(--warning-light); border-color: var(--warning-color); }
-        #profile .profile-main-info { text-align: center; padding: 2rem 1rem; }
-        #profile .profile-main-info h2 { font-size: 2rem; margin: 0; }
-        #profile .profile-main-info p { font-size: 1.1rem; font-weight: 500; margin: 0.5rem 0 1.5rem 0; }
-        #profile .profile-actions { display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem; }
-        #profile .profile-actions .btn { width: auto; flex-grow: 1; }
-        .btn-outline { background-color: var(--surface-color); color: var(--primary-color); border: 1px solid var(--primary-color); box-shadow: none; }
-        #profile-details-wrapper { background-color: var(--surface-color); padding: 1.5rem; border-radius: 12px; }
-        #profile-details-wrapper h3 { margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
         #profile-details p { margin: 1rem 0; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; display: flex; justify-content: space-between; }
-        #profile-details p:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0;}
+        #profile-details p:last-child { border-bottom: none; }
         #profile-details strong { color: var(--text-secondary); }
-        .performance-charts { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 1.5rem; }
-        .chart-card { background-color: var(--surface-color); padding: 1rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .chart-card h4 { margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary-dark); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem; }
         .chattutor-page-container.page.active { display: flex !important; flex-direction: column; height: calc(100vh - 125px); padding: 0 !important; margin: -1.5rem !important; overflow: hidden; background-color: var(--background-color); }
         .chattutor-header { background: var(--surface-color); padding: 0.75rem 1.5rem; text-align: center; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
         .chattutor-header h3 { margin: 0; font-size: 1.2rem; font-weight: 600; color: var(--primary-dark); }
@@ -205,9 +194,15 @@
         .unique-code-form input[type="text"] { padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); font-size: 1rem; }
         .unique-code-form .btn { width: auto; }
         #activation-message { margin-top: 1rem; font-weight: 500; }
+        .profile-header { text-align: center; padding: 2rem; background: linear-gradient(to right, var(--primary-color), var(--primary-dark)); color: white; border-radius: 12px 12px 0 0; margin: -1.5rem -1.5rem 1.5rem -1.5rem; }
+        .profile-picture { width: 100px; height: 100px; border-radius: 50%; background-color: var(--surface-color); border: 4px solid rgba(255, 255, 255, 0.5); margin-bottom: 0.5rem; }
+        .profile-header h2 { margin: 0; font-weight: 600; }
+        .profile-header p { margin: 0.25rem 0 0; opacity: 0.8; }
+        .performance-charts { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+        .chart-card { background-color: var(--surface-color); padding: 1rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .chart-card h4 { margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary-dark); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem; }
         #login-modal, #signup-modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.6); padding-top: 60px; }
         .modal-content { background-color: var(--background-color); margin: auto; padding: 2rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); max-width: 400px; position: relative; transform: translateY(-20px); animation: modalFadeIn 0.3s forwards; display: flex; flex-direction: column; }
-        @keyframes modalFadeIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .modal-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 1.5rem; }
         .modal-tab { flex: 1; text-align: center; padding: 1rem; font-weight: 600; cursor: pointer; color: var(--text-secondary); border-bottom: 2px solid transparent; transition: all 0.3s ease; }
         .modal-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
@@ -440,34 +435,19 @@
                 <button class="back-btn" onclick="history.back()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Back
                 </button>
-                <div class="card">
-                    <div class="profile-main-info">
+                 <div class="card">
+                    <div class="profile-header">
+                        <img class="profile-picture" src="https://via.placeholder.com/100/CCCCCC/FFFFFF?text=Profile" alt="Profile Picture">
                         <h2 id="profile-name"></h2>
+                        <p id="profile-email"></p>
                         <p id="pass-status"></p>
                     </div>
-
-                    <div class="profile-actions">
-                        <button id="share-btn" class="btn btn-outline">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-                            Share App
-                        </button>
-                        <button id="help-btn" class="btn btn-outline">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                            Help & Support
-                        </button>
+                    <div id="profile-details">
+                        <p><strong>Mobile:</strong> <span id="profile-mobile"></span></p>
+                        <p><strong>Joined:</strong> <span id="profile-joined"></span></p>
                     </div>
-
-                    <div id="profile-details-wrapper">
-                         <h3>Account Details</h3>
-                        <div id="profile-details">
-                            <p><strong>Mobile:</strong> <span id="profile-mobile"></span></p>
-                            <p><strong>Email:</strong> <span id="profile-email"></span></p>
-                            <p><strong>Joined:</strong> <span id="profile-joined"></span></p>
-                        </div>
-                    </div>
-                    
-                    <div class="stat-card" style="margin-top:1.5rem;">
-                         <p>Average Percentage</p><span id="average-percentage"></span>
+                    <div class="stat-card">
+                        <p>Average Percentage</p><span id="average-percentage"></span>
                     </div>
                     <div class="stat-card" style="margin-top:1.5rem;">
                         <p>Average Rank</p><span id="average-rank"></span>
@@ -671,6 +651,9 @@
             currentUser = null;
             mainApp.style.display = 'none';
             showAuthModal();
+            localStorage.removeItem('premium_pass_status');
+            localStorage.removeItem('mockTestResults');
+            localStorage.removeItem('mcq_sets');
         }
     }
     
@@ -776,6 +759,7 @@
             const data = await response.json();
             if (data.success) {
                 hasPremiumPass = true;
+                localStorage.setItem('premium_pass_status', 'true');
                 return { success: true, message: "Pass activated successfully! Redirecting to home..." };
             } else {
                 return { success: false, message: data.message || "Activation failed." };
@@ -790,7 +774,7 @@
         if (!currentUser) return;
         
         document.getElementById('profile-name').textContent = currentUser.name;
-        document.getElementById('profile-email').textContent = currentUser.email || 'Not Provided';
+        document.getElementById('profile-email').textContent = currentUser.email;
         document.getElementById('profile-mobile').textContent = currentUser.mobile;
         document.getElementById('profile-joined').textContent = new Date(currentUser.joinedAt).toLocaleDateString();
 
@@ -799,10 +783,6 @@
         passStatusEl.textContent = isActive ? "Premium Pass Active ✅" : "Premium Pass Not Active";
         passStatusEl.style.color = isActive ? 'var(--success-color)' : 'var(--danger-color)';
         
-        // Add your links here for Share and Help buttons
-        document.getElementById('share-btn').onclick = () => { alert('Sharing the app!'); /* window.open('YOUR_APP_LINK_HERE'); */ };
-        document.getElementById('help-btn').onclick = () => { alert('Redirecting to help!'); /* window.open('YOUR_WHATSAPP_LINK_HERE'); */ };
-
         try {
             const response = await fetch(`${TEST_API_ENDPOINT}/history`, {
                 method: 'GET',
@@ -1381,30 +1361,23 @@
     });
 
     // =======================================================
-    // ========== AI MCQ GENERATOR TOOL SCRIPT START (REFINED)
+    // ========== AI MCQ GENERATOR TOOL SCRIPT START =========
     // =======================================================
     let fullText = "";
     let usedChars = 0;
     const CHUNK_SIZE = 1500;
-
-    const errorBox = document.getElementById("errorBox");
-    const debugRaw = document.getElementById("debugRaw");
-    const resultArea = document.getElementById("resultArea");
-    const loadingEl = document.getElementById("loading");
-    const generateBtn = document.getElementById("generateBtn");
-    const clearBtn = document.getElementById("clearBtn");
+    const MAX_MCQ_PER_REQUEST = 20;
 
     function showError(stage, err) {
-        errorBox.style.display = 'block';
-        errorBox.textContent = `Error during: ${stage}\nMessage: ${err.message || String(err)}`;
+        const errBox = document.getElementById("errorBox");
+        errBox.textContent = `Error at: ${stage}\nMessage: ${err.message || err}`;
         console.error(stage, err);
     }
 
-    function setWorking(on, message = "⏳ Working... Please wait.") {
-        loadingEl.style.display = on ? "block" : "none";
-        loadingEl.textContent = message;
-        generateBtn.disabled = on;
-        clearBtn.disabled = on;
+    function setWorking(on) {
+        document.getElementById("loading").style.display = on ? "block" : "none";
+        document.getElementById("generateBtn").disabled = on;
+        document.getElementById("clearBtn").disabled = on;
     }
 
     async function extractTextFromFile(file) {
@@ -1428,10 +1401,10 @@
         if (/\.(png|jpg|jpeg|bmp)$/i.test(name)) {
             const res = await Tesseract.recognize(file, 'eng', {
                 logger: m => {
-                    debugRaw.textContent = `OCR Status: ${m.status} ${m.progress ? Math.round(m.progress*100) + '%' : ''}`;
+                    document.getElementById("debugRaw").textContent = `OCR: ${m.status} ${m.progress ? Math.round(m.progress*100) + '%' : ''}`;
                 }
             });
-            debugRaw.textContent = "OCR complete.";
+            document.getElementById("debugRaw").textContent = "";
             return res.data.text;
         }
         return await file.text();
@@ -1448,68 +1421,54 @@
         });
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || `API request failed with status ${response.status}`);
+            throw new Error(errorData.message || "Failed to generate MCQs from API.");
         }
         return response.json();
     }
 
     async function generateMCQHandler() {
-        errorBox.style.display = 'none';
-        debugRaw.textContent = "";
-        resultArea.textContent = "";
-        
         try {
-            setWorking(true, "Preparing to generate...");
+            setWorking(true);
+            document.getElementById("errorBox").textContent = "";
+            document.getElementById("debugRaw").textContent = "";
             const fileInput = document.getElementById("fileInput");
-            if (!fileInput.files || !fileInput.files.length) {
-                throw new Error("Please select a file first.");
-            }
+            if (!fileInput.files || !fileInput.files.length) throw new Error("No file selected");
             const file = fileInput.files[0];
-
             if (!fullText) {
                 try {
-                    setWorking(true, `Extracting text from ${file.name}...`);
                     fullText = await extractTextFromFile(file);
-                    if (!fullText || !fullText.trim() || fullText.trim().length < 50) {
-                        throw new Error("Could not extract enough readable text from the document.");
+                    if (!fullText || !fullText.trim() || fullText.trim().length < 20) {
+                        throw new Error("Document does not contain readable text.");
                     }
                     usedChars = 0;
-                    debugRaw.textContent = `Text extracted successfully (${fullText.length} characters). Ready to generate.`;
                 } catch (e) {
-                    showError("File Text Extraction", e);
-                    fullText = ""; // Reset on failure
+                    showError("File extraction", e);
                     return;
                 }
             }
-
             if (usedChars >= fullText.length) {
-                alert("✅ All content from the document has been processed. Please clear to use a new file.");
+                alert("✅ All content from the document has been processed.");
                 return;
             }
-
             let count = parseInt(document.getElementById("mcqCount").value, 10);
             const language = document.getElementById("language").value;
-            
             const chunk = fullText.slice(usedChars, Math.min(usedChars + CHUNK_SIZE, fullText.length));
             usedChars += chunk.length;
-            debugRaw.textContent = `Processing chunk of ${chunk.length} characters. (${usedChars}/${fullText.length} processed)`;
 
             let mcqResult;
             try {
-                setWorking(true, "🤖 Sending request to AI... This may take a moment.");
+                document.getElementById("debugRaw").textContent = "Requesting MCQs from AI...";
                 mcqResult = await callLiveMCQGenerator(chunk, count, language);
             } catch (e) {
-                showError("AI MCQ Generation", e);
-                usedChars -= chunk.length; // Revert chunk processing on failure
+                showError("MCQ generation", e);
                 return;
             }
             
             const got = mcqResult.mcqs ? mcqResult.mcqs.length : 0;
             if (got === 0) {
-                resultArea.textContent = `AI could not generate any MCQs from this part of the document. You can try again.`;
+                document.getElementById("resultArea").textContent = `Could not generate MCQs from this chunk.`;
                 return;
             }
-
             const setsKey = 'mcq_sets';
             const existingSets = JSON.parse(localStorage.getItem(setsKey) || "[]");
             const newSet = {
@@ -1523,36 +1482,42 @@
             };
             existingSets.push(newSet);
             localStorage.setItem(setsKey, JSON.stringify(existingSets));
-            
-            alert(`Success! Generated ${newSet.generated} MCQs. The new test is now available on the Home page under the 'Custom' tab.`);
+            alert(`Successfully generated ${newSet.generated} MCQs! Find the new test under the 'Custom' tab or on the Home page.`);
             activeTestCategory = 'All';
             renderMenuTabs();
             renderPageContent();
-            resultArea.textContent = `Generated ${newSet.generated} MCQs.`;
-            
+            document.getElementById("resultArea").textContent = `Generated ${newSet.generated} MCQs.`;
             if (usedChars >= fullText.length) {
-                debugRaw.textContent = "✅ All content from the document has been successfully processed.";
+                alert("✅ All chunks processed.");
             }
-
         } catch (err) {
-            showError("MCQ Generator", err);
+            showError("Main Handler", err);
         } finally {
             setWorking(false);
         }
     }
 
     function clearAllGeneratorState() {
-        if (!confirm("This will clear the currently loaded document and reset the generator. Are you sure?")) return;
+        if (!confirm("This will clear the currently loaded document text and reset the MCQ generator. Are you sure?")) return;
         fullText = "";
         usedChars = 0;
-        resultArea.innerHTML = "";
-        errorBox.style.display = 'none';
-        debugRaw.textContent = "";
+        document.getElementById("resultArea").innerHTML = "";
+        document.getElementById("errorBox").textContent = "";
+        document.getElementById("debugRaw").textContent = "";
         document.getElementById("fileInput").value = "";
     }
 
-    generateBtn.addEventListener("click", generateMCQHandler);
-    clearBtn.addEventListener("click", clearAllGeneratorState);
+    document.getElementById("generateBtn").addEventListener("click", generateMCQHandler);
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.MathJax) MathJax.typesetPromise();
+        });
+    } else {
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    document.getElementById("clearBtn").addEventListener("click", clearAllGeneratorState);
 
     // =======================================================
     // ========== CHATTUTOR (DOUBT SECTION) SCRIPT START =========
