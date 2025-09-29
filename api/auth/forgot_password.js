@@ -1,11 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
+import bcrypt from 'bcrypt';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl || '', supabaseServiceKey || '');
 
+const SALT_ROUNDS = 10;
+
 export default async function handler(req, res) {
-  // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -28,7 +30,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long.' });
     }
 
-    // Find user by mobile number
     const { data: user, error: findError } = await supabase
       .from('users')
       .select('id')
@@ -39,10 +40,11 @@ export default async function handler(req, res) {
       return res.status(404).json({ success: false, message: 'User with this mobile number not found.' });
     }
 
-    // Update the user's password
+    const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
     const { error: updateError } = await supabase
       .from('users')
-      .update({ password: newPassword }) // Remember to hash passwords in a real production app!
+      .update({ password: hashedPassword })
       .eq('id', user.id);
 
     if (updateError) {
@@ -52,7 +54,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ success: true, message: 'Password updated successfully.' });
 
-  } catch (error) {
+  } catch (error)
+ {
     console.error('Forgot password error:', error);
     return res.status(500).json({ success: false, message: 'An internal server error occurred.' });
   }
