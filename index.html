@@ -818,29 +818,17 @@
     const MCQ_GENERATOR_ENDPOINT = "/api/generate-mcq";
 
     let allTests = {};
-    let allQuestions = {};
 
     async function fetchData() {
         try {
             const testsResponse = await fetch(`${TEST_API_ENDPOINT}/`);
+            if (!testsResponse.ok) {
+                throw new Error(`API for test list failed with status ${testsResponse.status}`);
+            }
             allTests = await testsResponse.json();
-            const questionsResponse = await fetch(`${TEST_API_ENDPOINT}/questions`);
-            allQuestions = await questionsResponse.json();
         } catch(e) {
-            console.error("Failed to fetch test data from API. Using local mock data.");
-            allTests = {
-                "PYQ Full Set": [{ id: "ssc_cgl_2023_full", name: "SSC CGL Tier 1 (2023)", subject: "Full", description: "Full mock from previous year.", isPremium: false }, { id: "ssc_chsl_2023_full", name: "SSC CHSL Tier 1 (2023)", subject: "Full", description: "Full mock from previous year.", isPremium: true },],
-                "PYQ Sectional Set": [{ id: "reasoning_2023", name: "Reasoning Sectional (2023)", subject: "Reasoning", description: "Challenge your logical skills.", isPremium: false }, { id: "maths_2023", name: "Maths Sectional (2023)", subject: "Maths", description: "Sharpen your math skills.", isPremium: true },],
-                "Mock Tests": [{ id: "gk_set_1", name: "General Knowledge Set 1", subject: "GK", description: "A quick test of your GK.", isPremium: false }, { id: "english_set_1", name: "English Language Set 1", subject: "English", description: "Test your grammar & vocab.", isPremium: true },]
-            };
-            allQuestions = {
-                "ssc_cgl_2023_full": Array.from({ length: 25 }, (v, i) => ({ question: `SSC CGL Question ${i + 1}`, options: ["A", "B", "C", "D"], answer: "A" })),
-                "ssc_chsl_2023_full": Array.from({ length: 25 }, (v, i) => ({ question: `SSC CHSL Question ${i + 1}`, options: ["A", "B", "C", "D"], answer: "A" })),
-                "reasoning_2023": Array.from({ length: 15 }, (v, i) => ({ question: `Reasoning Question ${i + 1}`, options: ["A", "B", "C", "D"], answer: "A" })),
-                "maths_2023": [{ question: "Solve the quadratic equation \\(x^2 - 5x + 6 = 0\\). What are the roots?", options: ["x = 2, x = 3", "x = -2, x = -3", "x = 1, x = 6", "x = -1, x = -6"], answer: "x = 2, x = 3" }],
-                "gk_set_1": [{ question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Rome"], answer: "Paris" }, { question: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Jupiter", "Venus"], answer: "Mars" }],
-                "english_set_1": Array.from({ length: 10 }, (v, i) => ({ question: `English Question ${i + 1}`, options: ["A", "B", "C", "D"], answer: "A" })),
-            };
+            console.error("Failed to fetch test data from API:", e);
+            testSectionsContainer.innerHTML = `<div class="card"><p>Could not load test sets. Please check your connection or contact support.</p></div>`;
         }
     }
     
@@ -912,13 +900,15 @@
             let totalRank = 0;
             let totalPercentage = 0;
             const recentPercentages = [];
+            const recentRanks = [];
             const recentLabels = [];
             
             const recentHistory = history.slice(0, 5);
 
             recentHistory.forEach((test, index) => {
                 recentPercentages.unshift(test.percentage);
-                recentLabels.unshift(`Test #${history.length - index}`);
+                recentRanks.unshift(test.rank);
+                recentLabels.unshift(test.test_name.substring(0, 15));
             });
             
             history.forEach(test => {
@@ -934,20 +924,63 @@
             
             const scoresChartCanvas = document.getElementById('scores-chart');
             if(window.scoresChartInstance) window.scoresChartInstance.destroy();
+
             window.scoresChartInstance = new Chart(scoresChartCanvas.getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: recentLabels,
-                    datasets: [{
-                        label: 'Score Percentage',
-                        data: recentPercentages,
-                        borderColor: 'var(--primary-color)',
-                        backgroundColor: 'rgba(74, 144, 226, 0.2)',
-                        tension: 0.3,
-                        fill: true
-                    }]
+                    datasets: [
+                        {
+                            label: 'Percentage (%)',
+                            data: recentPercentages,
+                            borderColor: 'var(--primary-color)',
+                            backgroundColor: 'rgba(74, 144, 226, 0.2)',
+                            yAxisID: 'yPercentage',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Rank',
+                            data: recentRanks,
+                            borderColor: 'var(--purple-color)',
+                            backgroundColor: 'rgba(142, 68, 173, 0.2)',
+                            yAxisID: 'yRank',
+                            tension: 0.3,
+                        }
+                    ]
                 },
-                options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true }
+                    },
+                    scales: {
+                        yPercentage: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            min: 0,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Percentage (%)'
+                            }
+                        },
+                        yRank: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            reverse: true,
+                            grid: {
+                                drawOnChartArea: false, // only draw grid for one axis to avoid clutter
+                            },
+                             title: {
+                                display: true,
+                                text: 'Rank'
+                            }
+                        }
+                    }
+                }
             });
 
         } catch (e) {
@@ -976,7 +1009,7 @@
         const testGrid = document.createElement('div');
         testGrid.className = 'test-set-grid';
 
-        const testsToShow = tests.slice(0, 2);
+        const testsToShow = tests.slice(0, 3);
         let sectionHTML = `<h2>${title}</h2>`;
 
         testsToShow.forEach(test => {
@@ -991,7 +1024,7 @@
                     ${premiumBadge}<h3>${test.name}</h3><p>${test.description}</p><div class="btn-container"><span class="btn-text">Start Test</span></div></div>`;
             }
         });
-        if (tests.length > 2) {
+        if (tests.length > 3) {
             testGrid.innerHTML += `<div class="view-all-card" data-category="${category}">View All &rarr;</div>`;
         }
 
@@ -1039,7 +1072,7 @@
         } else if (activeTestCategory === 'Custom') {
             renderFullCategory("Custom Generated Tests", customSets.filter(t => t.sourceFilename.toLowerCase().includes(lowerCaseSearchTerm)), "Custom");
         } else {
-            const testsInCategory = allTests[activeTestCategory].filter(test => test.name.toLowerCase().includes(lowerCaseSearchTerm) || test.description.toLowerCase().includes(lowerCaseSearchTerm));
+            const testsInCategory = allTests[activeTestCategory] ? allTests[activeTestCategory].filter(test => test.name.toLowerCase().includes(lowerCaseSearchTerm) || test.description.toLowerCase().includes(lowerCaseSearchTerm)) : [];
             renderFullCategory(activeTestCategory, testsInCategory, activeTestCategory);
         }
         attachStartTestListeners();
@@ -1233,26 +1266,36 @@
         userAnswers[currentQuestionIndex] = selectedOption ? selectedOption.value : undefined;
     }
 
-    function startTest(testId, testName, testSubject) {
-        currentTestName = testName;
-        currentTestId = testId;
-        currentTestSubject = testSubject;
+    async function startTest(testId, testName, testSubject) {
+        try {
+            const response = await fetch(`${TEST_API_ENDPOINT}/mcq?subject=${testId}`);
+            if(!response.ok) throw new Error("Could not fetch questions from the server.");
+            
+            const fetchedQuestions = await response.json();
+            if(!fetchedQuestions || fetchedQuestions.length === 0) {
+                 alert('This test set has no questions!');
+                 return;
+            }
+            questions = fetchedQuestions;
+            
+            currentTestName = testName;
+            currentTestId = testId;
+            currentTestSubject = testSubject;
 
-        questions = allQuestions[testId];
+            totalTestTime = Math.max(60, questions.length * 60);
+            testStartTime = Date.now();
+            runTimer(totalTestTime);
+            currentQuestionIndex = 0;
+            userAnswers = new Array(questions.length).fill(undefined);
+            markedForReview = new Array(questions.length).fill(false);
+            visitedStatus = new Array(questions.length).fill(false);
+            navigateTo('home-test');
+            displayQuestion(0);
 
-        if (!questions) {
-            alert('Test not found!');
-            return;
+        } catch(error) {
+            alert(`Error starting test: ${error.message}`);
+            console.error(error);
         }
-        totalTestTime = Math.max(60, (questions.length - 1) * 60);
-        testStartTime = Date.now();
-        runTimer(totalTestTime);
-        currentQuestionIndex = 0;
-        userAnswers = new Array(questions.length).fill(undefined);
-        markedForReview = new Array(questions.length).fill(false);
-        visitedStatus = new Array(questions.length).fill(false);
-        navigateTo('home-test');
-        displayQuestion(0);
     }
 
     function startCustomTest(setId, testName, testSubject) {
@@ -1267,7 +1310,7 @@
         currentTestId = `custom_${setId}`;
         currentTestSubject = testSubject;
         questions = formattedQuestions;
-        totalTestTime = Math.max(60, (questions.length - 1) * 60);
+        totalTestTime = Math.max(60, questions.length * 60);
         testStartTime = Date.now();
         runTimer(totalTestTime);
         currentQuestionIndex = 0;
@@ -1288,18 +1331,21 @@
     async function showResult() {
         saveAnswer();
         clearInterval(testTimerInterval);
-        let score = 0,
-            attempted = 0;
+        let score = 0;
+        let attempted = 0;
+
         questions.forEach((q, i) => {
             if (userAnswers[i] !== undefined) {
                 attempted++;
-                if (userAnswers[i] === q.answer) score++;
+                if (userAnswers[i] === q.answer) {
+                    score++;
+                }
             }
         });
 
         const accuracy = attempted > 0 ? (score / attempted) * 100 : 0;
-        const percentage = parseFloat(((score / questions.length) * 100).toFixed(0));
-        const customRank = calculateCustomRank(percentage);
+        const percentage = parseFloat(((score / questions.length) * 100).toFixed(2));
+        const rank = calculateCustomRank(percentage);
         const timeTakenInSeconds = Math.round((Date.now() - testStartTime) / 1000);
         const formattedTimeTaken = formatTime(timeTakenInSeconds);
         
@@ -1312,7 +1358,7 @@
                     testName: currentTestName,
                     subject: currentTestSubject,
                     score, 
-                    rank: customRank, 
+                    rank: rank, 
                     percentage, 
                     timeTaken: timeTakenInSeconds
                 })
@@ -1321,10 +1367,10 @@
             console.error("Failed to save result to backend:", e);
         }
 
-        document.getElementById('rank').textContent = `${customRank}`;
+        document.getElementById('rank').textContent = `${rank}`;
         document.getElementById('time-taken').textContent = formattedTimeTaken;
         document.getElementById('marks').textContent = `${score}/${questions.length}`;
-        document.getElementById('accuracy').textContent = `${accuracy.toFixed(0)}%`;
+        document.getElementById('accuracy').textContent = `${accuracy.toFixed(2)}%`;
 
         const lists = {
             correct: document.getElementById('correct-answers'),
@@ -1504,21 +1550,6 @@
         document.getElementById("clearBtn").disabled = on;
     }
 
-    async function extractTextFromZip(file) {
-        const zip = await JSZip.loadAsync(file);
-        let content = '';
-        const textExtensions = /\.(xml|rels)$/i;
-
-        for (const relativePath in zip.files) {
-            if (textExtensions.test(relativePath) && !zip.files[relativePath].dir) {
-                const txt = await zip.files[relativePath].async('string');
-                const parsed = new DOMParser().parseFromString(txt, 'text/xml');
-                content += parsed.documentElement.textContent + ' ';
-            }
-        }
-        return content.replace(/\s+/g, ' ').trim();
-    }
-
     async function extractTextFromFile(file) {
         const name = file.name.toLowerCase();
         if (name.endsWith('.pdf')) {
@@ -1538,7 +1569,16 @@
             return result.value;
         }
         if (name.endsWith('.pptx') || name.endsWith('.xlsx')) {
-             return extractTextFromZip(file);
+             const zip = await JSZip.loadAsync(file);
+             let content = '';
+             for (const relativePath in zip.files) {
+                 if (/\.(xml|rels)$/i.test(relativePath) && !zip.files[relativePath].dir) {
+                     const txt = await zip.files[relativePath].async('string');
+                     const parsed = new DOMParser().parseFromString(txt, 'text/xml');
+                     content += parsed.documentElement.textContent + ' ';
+                 }
+             }
+             return content.replace(/\s+/g, ' ').trim();
         }
         if (/\.(png|jpg|jpeg|bmp)$/i.test(name)) {
             const res = await Tesseract.recognize(file, 'eng', {
@@ -1586,11 +1626,16 @@
             const language = document.getElementById("language").value;
             
             document.getElementById("debugRaw").textContent = "Requesting MCQs from AI... This may take a moment.";
-            const mcqResult = await callLiveMCQGenerator(fullText, count, language);
+            const result = await callLiveMCQGenerator(fullText, count, language);
             
-            const got = mcqResult.mcqs ? mcqResult.mcqs.length : 0;
+            if(!result.success) {
+                throw new Error(result.message);
+            }
+
+            const got = result.mcqs ? result.mcqs.length : 0;
             if (got === 0) {
-                document.getElementById("resultArea").textContent = `Could not generate MCQs. Please try a different document.`;
+                alert(result.message || `The AI could not generate questions from the provided text. Please try with a different or more detailed document.`);
+                document.getElementById("resultArea").textContent = `Generation failed or no questions could be created.`;
                 return;
             }
 
@@ -1603,7 +1648,7 @@
                 language,
                 requested: count,
                 generated: got,
-                mcqs: mcqResult.mcqs || []
+                mcqs: result.mcqs || []
             };
             existingSets.push(newSet);
             localStorage.setItem(setsKey, JSON.stringify(existingSets));
@@ -1615,7 +1660,7 @@
             document.getElementById("resultArea").textContent = `Generated ${newSet.generated} MCQs.`;
 
         } catch (err) {
-            showError("Main Handler", err);
+            showError("MCQ Generation", err);
         } finally {
             setWorking(false);
         }
