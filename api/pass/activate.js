@@ -41,7 +41,6 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Find the code in the database
         const { data: premiumCode, error: codeError } = await supabase
             .from('premium_codes')
             .select('*')
@@ -55,8 +54,6 @@ export default async function handler(req, res) {
         if (premiumCode.is_used) {
             return res.status(400).json({ success: false, message: 'This code has already been used.' });
         }
-
-        // Update user to premium
         const { error: userUpdateError } = await supabase
             .from('users')
             .update({ is_premium: true })
@@ -65,8 +62,6 @@ export default async function handler(req, res) {
         if (userUpdateError) {
             throw userUpdateError;
         }
-
-        // Mark code as used
         await supabase
             .from('premium_codes')
             .update({
