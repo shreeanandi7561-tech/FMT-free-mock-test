@@ -54,7 +54,6 @@
         .btn { background-color: var(--primary-color); color: white; border: none; padding: 0.8rem 2rem; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3); width: 100%; }
         .btn:hover { background-color: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(74, 144, 226, 0.4); }
         .btn:disabled { background-color: #ccc; cursor: not-allowed; box-shadow: none; transform: none; }
-        .btn-secondary { background-color: #6c757d; }
         .back-btn { background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 500; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; padding: 0; }
         .page > .back-btn { margin-top: 1rem; margin-bottom: 1.5rem; }
         #ad-slider-placeholder { height: 70px; background-color: var(--surface-color); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: var(--text-secondary); border: 2px dashed var(--border-color); }
@@ -71,6 +70,7 @@
         .mcq-controls-inline > * { flex-grow: 1; }
         #mcq-generator-container select, #mcq-generator-container input[type="file"] { font-family: 'Poppins', sans-serif; padding: 0.7rem; font-size: 0.9rem; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; background-color: var(--surface-color); }
         #mcq-generator-container .btn { width: auto; padding: 0.7rem 1.5rem; font-size: 0.9rem; flex-shrink: 0; }
+        .btn-secondary { background-color: #6c757d; }
         #mcq-generator-container .btn-secondary { background-color: var(--surface-color); color: var(--primary-color); border: 1px solid var(--primary-color); box-shadow: none; }
         #mcq-generator-container .btn-secondary:hover { background-color: #e9f2ff; }
         #loading { display: none; color: var(--primary-dark); font-weight: 600; margin-top: 1rem; }
@@ -153,7 +153,7 @@
     <div class="container" id="main-app" style="display: none;">
         <header>
             <div class="header-top-row">
-                <button id="search-icon-btn" class="header-icon-btn" title="Search Tests"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
+                <button id="search-icon-btn" class="header-icon-btn" title="Search Tests"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
                 <h1 class="header-title">Mock Test Platform</h1>
                 <button id="filter-icon-btn" class="header-icon-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
             </div>
@@ -241,7 +241,6 @@
     // =======================================================
     
     // SECURITY FIX: Using relative paths instead of full URLs.
-    // This is more secure and works for both local development and live deployment.
     const AUTH_API_ENDPOINT = "/api/auth";
     const TEST_API_ENDPOINT = "/api/tests";
     const MCQ_GENERATOR_ENDPOINT = "/api/generate-mcq";
@@ -273,7 +272,7 @@
         }
     }
     
-    // Modal display functions from your original logic
+    // Original functions for modal display
     function showAuthModal(form = 'login') {
         if (!authModal) return;
         authModal.style.display = 'flex';
@@ -285,7 +284,6 @@
         signupTab.classList.toggle('active', form === 'signup');
     }
     function hideAuthModal() { if (authModal) authModal.style.display = 'none'; }
-
     function showForgotPasswordModal() { if (forgotPasswordModal) forgotPasswordModal.style.display = 'flex';}
     function hideForgotPasswordModal() { if (forgotPasswordModal) forgotPasswordModal.style.display = 'none';}
     
@@ -338,7 +336,30 @@
     document.getElementById('forgot-password-close')?.addEventListener('click', hideForgotPasswordModal);
     
     resetPasswordBtn?.addEventListener('click', async () => {
-        // Full forgot password logic
+        const mobile = document.getElementById('forgot-mobile').value;
+        const newPassword = document.getElementById('forgot-new-password').value;
+        const errorEl = document.getElementById('forgot-error');
+        const successEl = document.getElementById('forgot-success');
+        errorEl.textContent = '';
+        successEl.textContent = '';
+        try {
+             const response = await fetch(`${AUTH_API_ENDPOINT}/forgot_password`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mobile, newPassword })
+            });
+            const data = await response.json();
+            if(data.success){
+                successEl.textContent = "Password reset successfully! Please log in.";
+                setTimeout(() => {
+                    hideForgotPasswordModal();
+                    showAuthModal('login');
+                }, 2000);
+            } else {
+                errorEl.textContent = data.message || "Failed to reset password.";
+            }
+        } catch(e) {
+            errorEl.textContent = "An error occurred.";
+        }
     });
     
     function logout() {
@@ -351,14 +372,14 @@
     // =======================================================
     // ========== MAIN APP LOGIC (FULLY IMPLEMENTED) =========
     // =======================================================
-    let allTests = {};
-    let allQuestions = {};
     const pages = document.querySelectorAll('.page');
     const navTabs = document.querySelectorAll('.nav-tab');
+    let allTests = {};
+    let allQuestions = {};
 
     async function initializeApp() {
         await fetchData();
-        renderPageContent();
+        renderPageContent(); // Now this will render the fetched tests
         showPage(window.location.hash.substring(1) || 'home');
     }
 
@@ -437,6 +458,8 @@
             sectionHTML += `</div></div>`;
             container.innerHTML += sectionHTML;
         });
+        // Attach listeners to newly created test cards
+        attachStartTestListeners();
     }
 
     // Your original navigation functions
@@ -454,16 +477,23 @@
         showPage(pageId);
     }
     
-    // All other functions for test logic, MCQ generator, etc.
-    // e.g., startTest, formatTime, exitTest, etc. would be here.
-    
-    // Event Listeners from your original file
+    // Listeners and other functions from your original file
     navTabs.forEach(tab => {
-        tab.addEventListener('click', () => showPage(tab.dataset.target));
+        tab.addEventListener('click', (e) => showPage(e.currentTarget.dataset.target));
     });
     document.getElementById('help-btn')?.addEventListener('click', () => window.open('https://wa.me/YOUR_NUMBER', '_blank'));
     document.getElementById('share-btn')?.addEventListener('click', () => navigator.share ? navigator.share({title: 'Mock Test App', url: window.location.href}) : alert('Share not supported'));
     
+    function attachStartTestListeners() {
+        document.querySelectorAll('.test-set-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const testId = card.dataset.testid;
+                // Add your logic to start the test with this testId
+                alert(`Starting test with ID: ${testId}`);
+            });
+        });
+    }
+
     // Initialize the app when the DOM is loaded
     document.addEventListener('DOMContentLoaded', checkLoginStatus);
     </script>
