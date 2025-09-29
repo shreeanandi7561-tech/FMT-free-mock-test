@@ -2,8 +2,11 @@
 
 // Helper function to call Google Gemini API
 async function callGemini(text, count, language, apiKey) {
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+    
 
+    // Pro मॉडल के लिए यह सही और आधिकारिक नाम है
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${apiKey}`;
+    
     // This is the strict prompt you requested
     const prompt = `
         You are an expert MCQ (Multiple Choice Questions) creator for competitive exams.
