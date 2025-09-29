@@ -1,12 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
+import bcrypt from 'bcrypt';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
 const supabase = createClient(supabaseUrl || '', supabaseServiceKey || '');
 
 export default async function handler(req, res) {
-  // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -26,7 +25,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, message: 'Mobile number and password are required.' });
     }
 
-    // Find user by mobile number
     const { data: user, error: findError } = await supabase
       .from('users')
       .select('*')
@@ -37,8 +35,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, message: 'Invalid credentials.' });
     }
 
-    // IMPORTANT: This is a plain text password check. In a real production app, use a secure hashing library like bcrypt to compare passwords.
-    if (user.password !== password) {
+    // Compare hashed password
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
       return res.status(400).json({ success: false, message: 'Invalid credentials.' });
     }
 
