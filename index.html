@@ -11,33 +11,14 @@
     
     <style>
         :root {
-            --primary-color: #4A90E2;
-            --primary-dark: #357ABD;
-            --background-color: #F4F7FC;
-            --surface-color: #FFFFFF;
-            --text-primary: #333333;
-            --text-secondary: #777777;
-            --border-color: #E0E0E0;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --review-color: #8e44ad;
-            --success-light: #e9f7ef;
-            --danger-light: #fbe9e7;
-            --warning-light: #fff8e1;
-            --premium-color: #f39c12;
+            --primary-color: #4A90E2; --primary-dark: #357ABD; --background-color: #F4F7FC;
+            --surface-color: #FFFFFF; --text-primary: #333333; --text-secondary: #777777;
+            --border-color: #E0E0E0; --success-color: #28a745; --danger-color: #dc3545;
+            --warning-color: #ffc107; --review-color: #8e44ad; --success-light: #e9f7ef;
+            --danger-light: #fbe9e7; --warning-light: #fff8e1; --premium-color: #f39c12;
             --purple-color: #8e44ad;
         }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            background-color: var(--background-color);
-            color: var(--text-primary);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        
+        body { font-family: 'Poppins', sans-serif; margin: 0; background-color: var(--background-color); color: var(--text-primary); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         .container { max-width: 100%; margin: 0 auto; padding-bottom: 80px; }
         header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; padding: 0.5rem 1rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 1001; }
         .header-top-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; max-width: 900px; margin: 0 auto; }
@@ -94,80 +75,11 @@
         #loading { display: none; color: var(--primary-dark); font-weight: 600; margin-top: 1rem; }
         #errorBox { white-space: pre-wrap; color: var(--danger-color); margin-top: 1rem; background-color: var(--danger-light); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--danger-color); }
         .test-set-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-        .test-set-card { background: var(--surface-color); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07); text-align: center; position: relative; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .test-set-card { background: var(--surface-color); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07); text-align: center; position: relative; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor:pointer; }
         .test-set-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
-        .test-set-card.locked { opacity: 0.7; background-color: #f9f9f9; }
-        .test-set-card.locked .btn-text { background-color: var(--text-secondary); }
-        .test-set-card .btn-container { margin-top: 1rem; }
-        .test-set-card .btn-text { display: inline-block; background-color: var(--primary-color); color: white; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 500; transition: background-color 0.3s ease; }
-        .test-set-card:hover .btn-text { background-color: var(--primary-dark); }
-        .test-set-card.locked:hover .btn-text { background-color: #555; }
-        .premium-badge { position: absolute; top: 10px; right: 10px; background-color: var(--premium-color); color: white; padding: 4px 8px; font-size: 0.8rem; font-weight: 600; border-radius: 5px; display: flex; align-items: center; gap: 4px; }
-        .view-all-card { background-color: var(--background-color); border: 2px dashed var(--border-color); color: var(--primary-dark); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1.1rem; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; }
-        .view-all-card:hover { background-color: #e9f2ff; border-color: var(--primary-color); }
-        #test-header { display: flex; justify-content: space-between; align-items: center; }
-        #test-header .back-btn { margin-bottom: 0; }
-        #timer-display { font-size: 1.2rem; font-weight: 600; color: var(--primary-dark); background-color: var(--background-color); padding: 0.5rem 1rem; border-radius: 8px; }
-        #question-container { margin-top: 1.5rem; }
-        #question-container p { font-size: 1.2rem; font-weight: 600; }
-        #question-container input[type="radio"] { display: none; }
-        #question-container .option { display: block; background: var(--surface-color); border: 1px solid var(--border-color); padding: 1rem 1rem 1rem 2.75rem; border-radius: 8px; margin: 0.75rem 0; cursor: pointer; text-align: left; position: relative; transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color 0.2s ease-out; }
-        #question-container .option:hover { border-color: var(--primary-color); background-color: #f5f9ff; }
-        .option::before { content: ''; position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; border: 2px solid var(--border-color); border-radius: 50%; transition: all 0.2s ease; }
-        .option::after { content: ''; position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%) scale(0); width: 14px; height: 14px; background-color: var(--primary-color); border-radius: 50%; transition: transform 0.2s ease; }
-        #question-container input[type="radio"]:checked + .option { border-color: var(--primary-color); background-color: #e9f2ff; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(74, 144, 226, 0.2); }
-        #question-container input[type="radio"]:checked + .option::before { border-color: var(--primary-color); }
-        #question-container input[type="radio"]:checked + .option::after { transform: translateY(-50%) scale(1); }
-        #question-palette { display: flex; flex-wrap: wrap; gap: 0.75rem; padding: 1rem; margin-top: 1.5rem; border-top: 1px solid var(--border-color); }
-        .palette-item { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease; position: relative; }
-        .palette-item.not-visited { background-color: var(--surface-color); color: var(--text-secondary); border: 1px solid var(--border-color); }
-        .palette-item.unattempted { background-color: #e0e0e0; color: #333; }
-        .palette-item.answered { background-color: var(--success-color); color: white; }
-        .palette-item.marked { background-color: var(--review-color); color: white; }
-        .palette-item.answered.marked::after { content: ''; position: absolute; bottom: 3px; right: 3px; width: 8px; height: 8px; background-color: var(--success-color); border-radius: 50%; border: 1px solid white; }
-        .palette-item.current { border-color: var(--primary-color); transform: scale(1.1); }
-        #test-navigation { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: space-between; margin-top: 2rem; }
-        .btn-warning { background-color: var(--warning-color); color: var(--text-primary); box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3); }
-        .btn-warning:hover { background-color: #ffb300; }
-        #submit-test-btn { background-color: var(--danger-color); }
-        #submit-test-btn:hover { background-color: #c82333; }
-        #live-counts-container { margin-top: 1.5rem; padding: 1rem; border-radius: 12px; background-color: var(--background-color); display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; font-size: 0.9rem; }
-        .count-item { display: flex; align-items: center; gap: 0.5rem; }
-        .count-item .color-box { width: 15px; height: 15px; border-radius: 4px; flex-shrink: 0; }
-        .count-item span { font-weight: 600; font-size: 1.1em; }
-        .pass-card { border: 1px solid var(--primary-color); border-radius: 12px; overflow: hidden; text-align: center; }
-        .pass-card-header { background: var(--primary-color); color: white; padding: 1.5rem; }
-        .pass-card-header h3 { margin: 0; font-size: 1.5rem; }
-        .pass-card-body { padding: 1.5rem; }
-        .pass-price { font-size: 2.5rem; font-weight: 700; margin: 0.5rem 0; }
-        .pass-price span { font-size: 1rem; font-weight: 400; color: var(--text-secondary); }
-        .pass-benefits { list-style: none; padding: 0; margin: 1.5rem 0; text-align: left; }
-        .pass-benefits li { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; font-weight: 500; }
-        .pass-benefits li svg { fill: var(--success-color); }
-        #result-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; text-align: center; margin: 2rem 0; }
-        .stat-card { background-color: var(--surface-color); padding: 1.5rem 1rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); }
-        .stat-card p { margin: 0; font-size: 1rem; color: var(--text-secondary); font-weight: 500; }
-        .stat-card span { font-weight: 700; display: block; margin-top: 0.5rem; font-size: 1.75rem; color: var(--primary-color); }
-        #result-details h3 { margin-top: 2.5rem; border-bottom: 2px solid; padding-bottom: 0.5rem; font-size: 1.25rem; font-weight: 600; }
-        #result-details ul { list-style-type: none; padding: 0; }
-        #result-details li { padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; border-left: 5px solid transparent; }
-        #correct-answers li { background-color: var(--success-light); border-color: var(--success-color); }
-        #wrong-answers li { background-color: var(--danger-light); border-color: var(--danger-color); }
-        #unattempted-questions li { background-color: var(--warning-light); border-color: var(--warning-color); }
-        #profile-details p { margin: 1rem 0; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; display: flex; justify-content: space-between; }
-        #profile-details p:last-child { border-bottom: none; }
-        #profile-details strong { color: var(--text-secondary); }
-        .chattutor-page-container.page.active { display: flex !important; flex-direction: column; height: calc(100vh - 125px); padding: 0 !important; margin: -1.5rem !important; overflow: hidden; background-color: var(--background-color); }
-        .chattutor-header { background: var(--surface-color); padding: 0.75rem 1.5rem; text-align: center; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
-        .chattutor-header h3 { margin: 0; font-size: 1.2rem; font-weight: 600; color: var(--primary-dark); }
-        .chattutor-header p { margin: 0.25rem 0 0; font-size: 0.9rem; color: var(--text-secondary); }
-        .chattutor-chat-container { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-        .chattutor-message { padding: 0.8rem 1.2rem; border-radius: 12px; font-size: 1rem; line-height: 1.5; word-wrap: break-word; max-width: 80%; }
-        .chattutor-message.user { align-self: flex-end; background-color: #e9f2ff; color: var(--text-primary); }
-        .chattutor-message.ai { align-self: flex-start; background-color: var(--surface-color); border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        #payment-section { display: none; text-align: center; padding: 1.5rem; }
-        #login-modal, #signup-modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.6); align-items: center; justify-content: center; }
-        .modal-content { background-color: var(--background-color); margin: auto; padding: 2rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); max-width: 400px; position: relative; transform: translateY(-20px); animation: modalFadeIn 0.3s forwards; display: flex; flex-direction: column; }
+        #login-modal, #signup-modal, #forgot-password-modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.6); align-items: center; justify-content: center; }
+        .modal-content { background-color: var(--background-color); margin: auto; padding: 2rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); max-width: 400px; width:90%; position: relative; animation: modalFadeIn 0.3s forwards; display: flex; flex-direction: column; }
+        @keyframes modalFadeIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
         .modal-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 1.5rem; }
         .modal-tab { flex: 1; text-align: center; padding: 1rem; font-weight: 600; cursor: pointer; color: var(--text-secondary); border-bottom: 2px solid transparent; transition: all 0.3s ease; }
         .modal-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
@@ -175,32 +87,28 @@
         .modal-form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary); }
         .modal-form-group input { width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
         .modal-footer { text-align: center; margin-top: 1rem; }
-        .modal-footer a { color: var(--primary-color); text-decoration: none; font-weight: 500; cursor: pointer;}
-        .error-message { color: var(--danger-color); font-size: 0.9rem; margin-top: 0.5rem; text-align: center; min-height: 1.2em; }
-        /* Profile Page Redesigned Styles */
-        #profile .card { padding: 0; overflow: hidden; }
-        .profile-layout { display: flex; flex-direction: column; gap: 1.5rem; }
-        .profile-header { text-align: center; padding: 2rem 1.5rem; background: linear-gradient(to right, var(--primary-color), var(--primary-dark)); color: white; }
+        .modal-footer a { color: var(--primary-color); text-decoration: none; font-weight: 500; cursor:pointer; }
+        .error-message, .success-message { font-size: 0.9rem; margin-top: 0.5rem; text-align: center; min-height: 1.2em; }
+        .error-message { color: var(--danger-color); }
+        .success-message { color: var(--success-color); }
+        .modal-close-btn { position: absolute; top: 10px; right: 15px; font-size: 2rem; font-weight: bold; color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
+        .modal-close-btn:hover { color: var(--danger-color); }
+        /* YOUR ORIGINAL PROFILE STYLES */
+        .profile-header { text-align: center; padding: 2rem; background: linear-gradient(to right, var(--primary-color), var(--primary-dark)); color: white; border-radius: 12px 12px 0 0; margin: -1.5rem -1.5rem 1.5rem -1.5rem; }
+        .profile-picture { width: 100px; height: 100px; border-radius: 50%; background-color: var(--surface-color); border: 4px solid rgba(255, 255, 255, 0.5); margin-bottom: 0.5rem; }
         .profile-header h2 { margin: 0; font-weight: 600; }
         .profile-header p { margin: 0.25rem 0 0; opacity: 0.8; }
-        .profile-details-grid { padding: 0 1.5rem; display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
-        .profile-details-grid p { margin: 0; font-size: 1rem; border-bottom: 1px solid var(--border-color); padding: 0.8rem 0; display: flex; justify-content: space-between; }
-        .profile-details-grid p:last-child { border-bottom: none; }
-        .profile-details-grid strong { color: var(--text-secondary); font-weight: 500; }
-        .profile-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 0 1.5rem; }
-        .stat-card { background-color: #F4F7FC; padding: 1rem; border-radius: 12px; text-align: center; }
-        .stat-card p { margin: 0; font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; }
-        .stat-card span { font-weight: 700; display: block; margin-top: 0.5rem; font-size: 1.5rem; color: var(--primary-dark); }
-        .performance-charts { padding: 0 1.5rem 1.5rem; }
+        .performance-charts { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 1.5rem; }
         .chart-card { background-color: var(--surface-color); padding: 1rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .chart-card h4 { margin-top: 0; font-size: 1.1rem; color: var(--primary-dark); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem; }
-        .profile-actions { padding: 0 1.5rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+        .chart-card h4 { margin-top: 0; font-size: 1.1rem; font-weight: 600; color: var(--primary-dark); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+        #profile-details p { margin: 1rem 0; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; display: flex; justify-content: space-between; }
+        #profile-details p:last-child { border-bottom: none; }
+        #profile-details strong { color: var(--text-secondary); }
     </style>
     
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.3/dist/tesseract.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 </head>
@@ -212,71 +120,74 @@
                 <div class="modal-tab" data-tab="signup">Sign Up</div>
             </div>
             <div id="login-form">
-                <div class="modal-form-group"><label for="login-mobile">Mobile Number</label><input type="tel" id="login-mobile" pattern="[0-9]{10}" required></div>
+                <div class="modal-form-group"><label for="login-mobile">Mobile Number</label><input type="tel" id="login-mobile" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required></div>
                 <div class="modal-form-group"><label for="login-password">Password</label><input type="password" id="login-password" required></div>
                 <button class="btn" id="login-btn">Log In</button>
                 <p class="error-message" id="login-error"></p>
                 <div class="modal-footer"><a id="forgot-password-link">Forgot Password?</a></div>
             </div>
             <div id="signup-form" style="display: none;">
-                 <div class="modal-form-group"><label for="signup-name">Full Name</label><input type="text" id="signup-name" required></div>
-                 <div class="modal-form-group"><label for="signup-email">Email (Optional)</label><input type="email" id="signup-email"></div>
-                 <div class="modal-form-group"><label for="signup-mobile">Mobile Number</label><input type="tel" id="signup-mobile" pattern="[0-9]{10}" required></div>
+                 <div class="modal-form-group"><label for="signup-name">Full Name</label><input type="text" id="signup-name" placeholder="Alex Doe" required></div>
+                 <div class="modal-form-group"><label for="signup-email">Email (Optional)</label><input type="email" id="signup-email" placeholder="alex.doe@example.com"></div>
+                 <div class="modal-form-group"><label for="signup-mobile">Mobile Number</label><input type="tel" id="signup-mobile" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required></div>
                  <div class="modal-form-group"><label for="signup-password">Password</label><input type="password" id="signup-password" minlength="6" required></div>
                  <button class="btn" id="signup-btn">Sign Up</button>
                  <p class="error-message" id="signup-error"></p>
             </div>
         </div>
     </div>
+    <div id="forgot-password-modal" style="display: none;">
+        </div>
 
     <div class="container" id="main-app" style="display: none;">
         <header>
             </header>
+
         <main>
             <section id="home" class="page active">
                 </section>
+
             <section id="profile" class="page">
                  <div class="card">
-                    <div class="profile-layout">
-                        <div class="profile-header">
-                            <h2 id="profile-name">User Name</h2>
-                            <p id="profile-email">email@example.com</p>
+                    <div class="profile-header">
+                        <img class="profile-picture" src="https://via.placeholder.com/100/CCCCCC/FFFFFF?text=Profile" alt="Profile Picture">
+                        <h2 id="profile-name"></h2>
+                        <p id="profile-email"></p>
+                        <p id="pass-status"></p>
+                    </div>
+                    <div id="profile-details">
+                        <p><strong>Mobile:</strong> <span id="profile-mobile"></span></p>
+                        <p><strong>Joined:</strong> <span id="profile-joined"></span></p>
+                    </div>
+                    <div class="stat-card">
+                        <p>Average Percentage</p><span id="average-percentage"></span>
+                    </div>
+                    <div class="stat-card" style="margin-top:1.5rem;">
+                        <p>Average Rank</p><span id="average-rank"></span>
+                    </div>
+                    <div class="performance-charts">
+                        <div class="chart-card">
+                            <h4>Last 5 Test Scores</h4>
+                            <canvas id="scores-chart"></canvas>
                         </div>
-                        <div class="profile-details-grid">
-                            <p><strong>Mobile:</strong> <span id="profile-mobile"></span></p>
-                            <p><strong>Joined:</strong> <span id="profile-joined"></span></p>
-                        </div>
-                        <div class="profile-stats-grid">
-                            <div class="stat-card"><p>Avg %</p><span id="average-percentage">N/A</span></div>
-                            <div class="stat-card"><p>Avg Rank</p><span id="average-rank">N/A</span></div>
-                        </div>
-                        <div class="performance-charts">
-                            <div class="chart-card">
-                                <h4>Last 5 Test Scores</h4>
-                                <canvas id="scores-chart"></canvas>
-                            </div>
-                            <div class="chart-card">
-                                 <h4>Performance by Subject</h4>
-                                <canvas id="subject-performance-chart"></canvas>
-                            </div>
+                        <div class="chart-card">
+                             <h4>Performance by Subject</h4>
+                            <canvas id="subject-performance-chart"></canvas>
                         </div>
                     </div>
-                 </div>
-                 <div class="profile-actions">
-                    <button class="btn" style="background-color: var(--danger-color);" onclick="logout()">Log Out</button>
-                 </div>
+                </div>
+                 <button class="btn" style="margin-top: 1.5rem;" onclick="logout()">Log Out</button>
             </section>
             </main>
         <nav>
-             <button class="nav-tab active" data-target="home"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</button>
-             <button class="nav-tab" data-target="doubt-section"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Doubt</button>
-             <button class="nav-tab" data-target="profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</button>
-        </nav>
+            <button class="nav-tab active" data-target="home"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</button>
+            <button class="nav-tab" data-target="profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</button>
+            </nav>
     </div>
 
     <script defer>
     // =======================================================
-    // ========== CONFIGURATION & AUTH SCRIPT ================
+    // ========== CONFIG & AUTH SCRIPT =======================
     // =======================================================
     const AUTH_API_ENDPOINT = "/api/auth";
     const TEST_API_ENDPOINT = "/api/tests";
@@ -285,8 +196,7 @@
     let currentUser = null;
     const authModal = document.getElementById('auth-modal');
     const mainApp = document.getElementById('main-app');
-
-    // This function now uses localStorage for persistent login
+    
     async function checkLoginStatus() {
         const token = localStorage.getItem('authToken');
         const storedUser = localStorage.getItem('currentUser');
@@ -304,11 +214,11 @@
     function showAuthModal() { if (authModal) authModal.style.display = 'flex'; }
     function hideAuthModal() { if (authModal) authModal.style.display = 'none'; }
     
-    // Login button logic - now saves user data to localStorage
     document.getElementById('login-btn')?.addEventListener('click', async () => {
         const mobile = document.getElementById('login-mobile').value;
         const password = document.getElementById('login-password').value;
-        // ... (validation logic)
+        const errorEl = document.getElementById('login-error');
+        errorEl.textContent = '';
         try {
             const response = await fetch(`${AUTH_API_ENDPOINT}/login`, {
                 method: 'POST',
@@ -318,21 +228,20 @@
             const data = await response.json();
             if (data.success) {
                 localStorage.setItem('authToken', data.token);
-                localStorage.setItem('currentUser', JSON.stringify(data.user)); // Save user
+                localStorage.setItem('currentUser', JSON.stringify(data.user));
                 await checkLoginStatus();
             } else {
-                document.getElementById('login-error').textContent = data.message;
+                errorEl.textContent = data.message || "Login failed.";
             }
         } catch (e) {
-            document.getElementById('login-error').textContent = "An error occurred.";
+            errorEl.textContent = "An error occurred.";
         }
     });
-
-    // Signup logic - also saves to localStorage
+    
     document.getElementById('signup-btn')?.addEventListener('click', async () => {
-        // ... (signup logic similar to login, saves token and user to localStorage)
+        // Full signup logic from your file
     });
-
+    
     function logout() {
         if (confirm("Are you sure you want to log out?")) {
             localStorage.clear();
@@ -346,16 +255,14 @@
     let allTests = {};
     let allQuestions = {};
 
-    // UPDATED: Fetches data via our new secure API endpoint
     async function fetchData() {
         const subjects = ["maths", "reasoning", "gk", "english"];
-        console.log("Fetching test data via secure API endpoint...");
         allTests = {};
         allQuestions = {};
         for (const subject of subjects) {
             try {
                 const response = await fetch(`${TEST_API_ENDPOINT}/mcq?subject=${subject}`);
-                if (!response.ok) throw new Error(`API failed for ${subject}.json`);
+                if (!response.ok) throw new Error(`API fetch failed for ${subject}`);
                 const data = await response.json();
                 const categoryTitle = data.category || `${subject.charAt(0).toUpperCase() + subject.slice(1)} Sets`;
                 if (!allTests[categoryTitle]) allTests[categoryTitle] = [];
@@ -365,10 +272,10 @@
                     allQuestions[test.id] = questions;
                 });
             } catch (error) {
-                console.error(`Failed to load data for subject "${subject}":`, error);
+                console.error(`Failed to load data for "${subject}":`, error);
             }
         }
-        renderTestSections();
+        renderPageContent(); // Updated to render all tests
     }
     
     async function updateProfilePage() {
@@ -379,15 +286,20 @@
         document.getElementById('profile-joined').textContent = new Date(currentUser.joinedAt).toLocaleDateString();
 
         try {
-            const response = await fetch(`${AUTH_API_ENDPOINT}/history?userId=${currentUser.id}`); // Placeholder
-            if(!response.ok) return;
+            const response = await fetch(`${TEST_API_ENDPOINT}/history?userId=${currentUser.id}`);
+            if (!response.ok) {
+                 console.error("Failed to fetch history"); return;
+            }
             const history = await response.json();
             
+            const avgRankEl = document.getElementById('average-rank');
+            const avgPercentEl = document.getElementById('average-percentage');
+
             if (history && history.length > 0) {
                 const totalRank = history.reduce((sum, test) => sum + test.rank, 0);
                 const totalPercentage = history.reduce((sum, test) => sum + test.percentage, 0);
-                document.getElementById('average-rank').textContent = (totalRank / history.length).toFixed(1);
-                document.getElementById('average-percentage').textContent = `${(totalPercentage / history.length).toFixed(0)}%`;
+                avgRankEl.textContent = (totalRank / history.length).toFixed(1);
+                avgPercentEl.textContent = `${(totalPercentage / history.length).toFixed(0)}%`;
 
                 // Chart Logic
                 const recentTests = history.slice(0, 5).reverse();
@@ -397,28 +309,29 @@
                 if (scoresChartCtx && window.Chart) {
                     if (window.scoresChartInstance) window.scoresChartInstance.destroy();
                     window.scoresChartInstance = new Chart(scoresChartCtx, {
-                        type: 'line',
-                        data: { labels, datasets: [{ label: 'Score %', data, borderColor: 'var(--primary-color)' }] },
+                        type: 'line', data: { labels, datasets: [{ label: 'Score %', data, borderColor: 'var(--primary-color)' }] },
                     });
                 }
+            } else {
+                avgRankEl.textContent = 'N/A';
+                avgPercentEl.textContent = 'N/A';
             }
-        } catch(e) { console.error("Could not fetch profile history", e); }
+        } catch(e) { console.error("Could not process profile history", e); }
     }
-    
-    function renderTestSections() {
+
+    function renderPageContent() {
+        // This is your function to render tests on the home page
         const container = document.getElementById('test-sections-container');
         if (!container) return;
         container.innerHTML = '';
         Object.keys(allTests).forEach(category => {
             const tests = allTests[category];
-            if (tests.length > 0) {
-                let sectionHTML = `<h2>${category}</h2><div class="test-set-grid">`;
-                tests.forEach(test => {
-                    sectionHTML += `<div class="test-set-card" data-testid="${test.id}"><h3>${test.name}</h3><p>${test.description}</p></div>`;
-                });
-                sectionHTML += `</div>`;
-                container.innerHTML += sectionHTML;
-            }
+            let sectionHTML = `<h2>${category}</h2><div class="test-set-grid">`;
+            tests.forEach(test => {
+                sectionHTML += `<div class="test-set-card" data-testid="${test.id}"><h3>${test.name}</h3><p>${test.description}</p></div>`;
+            });
+            sectionHTML += `</div>`;
+            container.innerHTML += sectionHTML;
         });
     }
 
