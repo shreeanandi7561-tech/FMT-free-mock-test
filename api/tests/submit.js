@@ -18,7 +18,6 @@ function getUserIdFromToken(authHeader) {
 }
 
 export default async function handler(req, res) {
-    // CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -51,8 +50,7 @@ export default async function handler(req, res) {
                 rank: rank,
                 percentage: percentage,
                 time_taken_seconds: timeTaken
-                // user_answers: userAnswers // Optional: if your table has a JSONB column
-            }]);
+                
 
         if (error) {
             console.error('Error saving test result:', error);
