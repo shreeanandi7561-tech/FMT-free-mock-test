@@ -76,14 +76,14 @@
         .back-btn { background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 500; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; padding: 0; }
         .page > .back-btn { margin-top: 1rem; margin-bottom: 1.5rem; }
         #ad-slider-placeholder { height: 70px; background-color: var(--surface-color); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: var(--text-secondary); border: 2px dashed var(--border-color); }
-        .mcq-master-container { background-color: var(--surface-color); border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07); margin-bottom: 1.5rem; overflow: hidden; }
+        .mcq-master-container { background-color: var(--surface-color); border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07); margin-bottom: 1.5rem; overflow: hidden; border: 1px solid var(--border-color); }
         .mcq-toggle-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 1.5rem; transition: background-color 0.3s ease; }
         .mcq-toggle-header:hover { background-color: #f9f9f9; }
         .mcq-toggle-header h3 { margin: 0; font-size: 1.4rem; color: var(--primary-dark); }
         .mcq-toggle-header .toggle-icon { font-size: 2rem; font-weight: 600; transition: transform 0.3s ease; }
         .mcq-toggle-header.active .toggle-icon { transform: rotate(45deg); }
         #mcq-generator-container { max-height: 0; padding: 0 1.5rem; transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out; border-top: 1px solid transparent; }
-        .mcq-master-container.is-visible #mcq-generator-container { max-height: 500px; padding-top: 0; padding-bottom: 1.5rem; border-color: var(--border-color); }
+        .mcq-master-container.is-visible #mcq-generator-container { max-height: 500px; padding-top: 1.5rem; padding-bottom: 1.5rem; border-color: var(--border-color); }
         .mcq-form-area { display: flex; flex-direction: column; gap: 1rem; }
         .mcq-controls-inline { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
         .mcq-controls-inline > * { flex-grow: 1; }
@@ -225,38 +225,21 @@
         }
         .btn-secondary { background-color: var(--surface-color); color: var(--primary-color); border: 1px solid var(--primary-color); box-shadow: none; }
         .btn-secondary:hover { background-color: #e9f2ff; }
-        /* --- End Profile Page New Styles --- */
-
-        .chattutor-page-container.page.active { display: flex !important; flex-direction: column; height: calc(100vh - 125px); padding: 0 !important; margin: -1.5rem !important; overflow: hidden; background-color: var(--background-color); }
-        .chattutor-header { background: var(--surface-color); padding: 0.75rem 1.5rem; text-align: center; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
-        .chattutor-header h3 { margin: 0; font-size: 1.2rem; font-weight: 600; color: var(--primary-dark); }
-        .chattutor-header p { margin: 0.25rem 0 0; font-size: 0.9rem; color: var(--text-secondary); }
-        .chattutor-chat-container { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-        .chattutor-message { padding: 0.8rem 1.2rem; border-radius: 12px; font-size: 1rem; line-height: 1.5; word-wrap: break-word; max-width: 80%; }
-        .chattutor-message.user { align-self: flex-end; background-color: #e9f2ff; color: var(--text-primary); }
-        .chattutor-message.ai { align-self: flex-start; background-color: var(--surface-color); border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .chattutor-message .image-preview { max-width: 200px; margin-top: 0.5rem; border-radius: 8px; }
-        .chattutor-message.user .image-container { margin-top: 0.5rem; }
-        .chattutor-message.user img { max-width: 100%; border-radius: 8px; }
-        .chattutor-input-area { display: flex; padding: 1rem 1.5rem; background: var(--surface-color); border-top: 1px solid var(--border-color); flex-shrink: 0; align-items: center; gap: 1rem; }
-        .chattutor-input-container { display: flex; flex: 1; min-width: 0; align-items: center; }
-        #user-input { flex: 1; padding: 0.8rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; font-size: 1rem; font-family: 'Poppins', sans-serif; min-width: 50px; background-color: var(--surface-color); }
-        #user-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2); }
-        .chattutor-input-area .btn { margin-left: 0.5rem; padding: 0.8rem 1.5rem; width: auto; box-shadow: none; }
-        .chattutor-upload-icon { cursor: pointer; font-size: 28px; color: var(--text-secondary); flex-shrink: 0; font-style: normal; text-decoration: none; }
-        .chattutor-upload-icon:hover { color: var(--primary-color); }
-        #chattutor-file-input { display: none; }
-        #selected-image-container .selected-image { display: flex; align-items: center; background: #e0e0e0; padding: 5px 10px; border-radius: 8px; font-size: 0.8rem; flex-shrink: 0; }
-        #selected-image-container .selected-image img { width: 30px; height: 30px; object-fit: cover; border-radius: 4px; margin-right: 8px; }
-        #selected-image-container .remove-image { margin-left: 8px; cursor: pointer; color: var(--text-secondary); }
-        #selected-image-container .remove-image:hover { color: var(--danger-color); }
-        .typing-indicator { display: flex; padding: 1rem 1.5rem; align-items: center; color: var(--text-secondary); font-size: 0.9rem; align-self: flex-start; }
-        .typing-dots { display: flex; margin-left: 8px; }
-        .typing-dot { width: 7px; height: 7px; background-color: var(--text-secondary); border-radius: 50%; margin-right: 5px; animation: typingAnimation 1.4s infinite ease-in-out; }
-        .typing-dot:nth-child(1) { animation-delay: 0s; }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typingAnimation { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+        
+        /* --- Doubt Section Coming Soon --- */
+        #doubt-section-coming-soon {
+            text-align: center;
+            padding: 4rem 1.5rem;
+        }
+         #doubt-section-coming-soon h2 {
+            font-size: 2rem;
+            color: var(--primary-dark);
+         }
+         #doubt-section-coming-soon p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+         }
+        
         #payment-section { display: none; text-align: center; padding: 1.5rem; }
         #payment-section img { max-width: 200px; height: auto; margin: 1.5rem auto; display: block; }
         #payment-section .warning-message { background-color: var(--warning-light); color: var(--warning-color); padding: 1rem; border-radius: 8px; margin-top: 1rem; border: 1px solid var(--warning-color); }
@@ -281,7 +264,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js" defer></script>
-    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js`;</script>
+    <script>if(typeof pdfjsLib !== 'undefined') { pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js`; }</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.3/dist/tesseract.min.js" defer></script>
@@ -544,10 +527,6 @@
                         <h4>Last 5 Test Scores</h4>
                         <canvas id="scores-chart"></canvas>
                     </div>
-                    <div class="chart-card">
-                         <h4>Performance by Subject</h4>
-                        <canvas id="subject-performance-chart"></canvas>
-                    </div>
                 </div>
 
                 <div class="profile-actions">
@@ -558,22 +537,10 @@
                  <button class="btn" style="margin-top: 1.5rem; background-color: var(--danger-color);" onclick="logout()">Log Out</button>
             </section>
 
-            <section id="doubt-section" class="page chattutor-page-container">
-                <div class="chattutor-chat-container" id="chat-container">
-                    <div class="chattutor-message user">Hi! Can you solve a math problem?</div>
-                    <div class="chattutor-message ai">Of course! Please give me the question. You can also upload an image with text using the 📎 icon, and I'll process it using OCR technology.</div>
-                </div>
-
-                <div class="chattutor-input-area">
-                    <label for="chattutor-file-input" class="chattutor-upload-icon" title="Upload image">📎</label>
-                    <input type="file" id="chattutor-file-input" accept="image/*">
-                    
-                    <div id="selected-image-container"></div>
-                    
-                    <div class="chattutor-input-container">
-                        <input type="text" id="user-input" placeholder="Type your message here..." onkeypress="handleKeyPress(event)">
-                        <button class="btn" onclick="sendMessage()">SEND</button>
-                    </div>
+            <section id="doubt-section" class="page">
+                <div id="doubt-section-coming-soon" class="card">
+                    <h2>Coming Soon!</h2>
+                    <p>Our experts are getting ready to help you. This feature will be launched shortly.</p>
                 </div>
             </section>
         </main>
@@ -591,26 +558,22 @@
     // =======================================================
     // ========== AUTHENTICATION SCRIPT START ================
     // =======================================================
-    const AUTH_API_ENDPOINT = "/api/auth"; // Using relative path for Vercel deployment
+    const AUTH_API_ENDPOINT = "/api/auth";
     let currentUser = null;
     const authModal = document.getElementById('auth-modal');
     const mainApp = document.getElementById('main-app');
     
-    // --- Auth Forms ---
     const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
     const forgotPasswordForm = document.getElementById('forgot-password-form');
 
-    // --- Buttons ---
     const loginBtn = document.getElementById('login-btn');
     const signupBtn = document.getElementById('signup-btn');
     const resetPasswordBtn = document.getElementById('reset-password-btn');
 
-    // --- Links ---
     const forgotPasswordLink = document.getElementById('forgot-password-link');
     const backToLoginLink = document.getElementById('back-to-login-link');
     
-    // --- Inputs ---
     const loginMobileInput = document.getElementById('login-mobile');
     const loginPasswordInput = document.getElementById('login-password');
     const signupNameInput = document.getElementById('signup-name');
@@ -620,11 +583,9 @@
     const forgotMobileInput = document.getElementById('forgot-mobile');
     const newPasswordInput = document.getElementById('new-password');
 
-    // --- Error Messages ---
     const loginError = document.getElementById('login-error');
     const signupError = document.getElementById('signup-error');
     const forgotError = document.getElementById('forgot-error');
-
 
     async function checkLoginStatus() {
         const token = localStorage.getItem('authToken');
@@ -634,17 +595,14 @@
             showAuthModal();
             return;
         }
-
         try {
-            // Optional: You could add a quick verify endpoint if token expiry is a concern.
-            // For now, we trust the locally stored data for a faster startup.
             currentUser = JSON.parse(userData);
             hideAuthModal();
             mainApp.style.display = 'block';
             initializeApp();
         } catch (error) {
             console.error('Failed to parse user data:', error);
-            logout(false); // Clear corrupted data without confirmation
+            logout(false);
         }
     }
     
@@ -653,17 +611,14 @@
         const loginTab = document.querySelector('[data-tab="login"]');
         const signupTab = document.querySelector('[data-tab="signup"]');
         
-        // Hide all forms first
         loginForm.style.display = 'none';
         signupForm.style.display = 'none';
         forgotPasswordForm.style.display = 'none';
         
-        // Show the correct form
         if (form === 'login') loginForm.style.display = 'block';
         else if (form === 'signup') signupForm.style.display = 'block';
         else if (form === 'forgot') forgotPasswordForm.style.display = 'block';
 
-        // Update tab visibility and active state
         loginTab.style.display = (form === 'login' || form === 'signup') ? 'flex' : 'none';
         signupTab.style.display = (form === 'login' || form === 'signup') ? 'flex' : 'none';
         loginTab.classList.toggle('active', form === 'login');
@@ -680,7 +635,6 @@
 
     forgotPasswordLink.addEventListener('click', () => showAuthModal('forgot'));
     backToLoginLink.addEventListener('click', () => showAuthModal('login'));
-
 
     loginBtn.addEventListener('click', async () => {
         loginError.textContent = '';
@@ -806,7 +760,6 @@
             currentUser = null;
             mainApp.style.display = 'none';
             showAuthModal();
-            // Optional: Clear other app-specific data
             localStorage.removeItem('premium_pass_status');
             localStorage.removeItem('mcq_sets');
         };
@@ -823,11 +776,7 @@
     document.addEventListener('DOMContentLoaded', checkLoginStatus);
     
     // =======================================================
-    // ========== AUTHENTICATION SCRIPT END ==================
-    // =======================================================
-    
-    // =======================================================
-    // ========== MAIN APP LOGIC START (MODIFIED) ============
+    // ========== MAIN APP LOGIC START =======================
     // =======================================================
     const pages = document.querySelectorAll('.page');
     const navTabs = document.querySelectorAll('.nav-tab');
@@ -858,6 +807,7 @@
     let visitedStatus = [];
     let currentTestName = '';
     let currentTestId = '';
+    let currentTestSubject = '';
     let questions = [];
     let testTimerInterval = null;
     let totalTestTime = 0;
@@ -866,14 +816,13 @@
     const TEST_API_ENDPOINT = "/api/tests";
     const PASS_API_ENDPOINT = "/api/pass";
     const MCQ_GENERATOR_ENDPOINT = "/api/generate-mcq";
-    const CHAT_TUTOR_ENDPOINT = "/api/chat";
 
     let allTests = {};
     let allQuestions = {};
 
     async function fetchData() {
         try {
-            const testsResponse = await fetch(TEST_API_ENDPOINT);
+            const testsResponse = await fetch(`${TEST_API_ENDPOINT}/`);
             allTests = await testsResponse.json();
             const questionsResponse = await fetch(`${TEST_API_ENDPOINT}/questions`);
             allQuestions = await questionsResponse.json();
@@ -955,7 +904,8 @@
             const history = await response.json();
             
             if (!history || history.length === 0) {
-                 console.log("No test history found for this user.");
+                 document.getElementById('average-rank').textContent = "N/A";
+                 document.getElementById('average-percentage').textContent = "N/A";
                  return;
             }
             
@@ -963,21 +913,17 @@
             let totalPercentage = 0;
             const recentPercentages = [];
             const recentLabels = [];
-            const subjectData = {};
+            
+            const recentHistory = history.slice(0, 5);
 
-            history.forEach((test, index) => {
+            recentHistory.forEach((test, index) => {
+                recentPercentages.unshift(test.percentage);
+                recentLabels.unshift(`Test #${history.length - index}`);
+            });
+            
+            history.forEach(test => {
                 totalRank += test.rank;
                 totalPercentage += test.percentage;
-                if (index < 5) {
-                    recentPercentages.unshift(test.percentage);
-                    recentLabels.unshift(`Test ${history.length - index}`);
-                }
-                const subject = test.subject || 'Other';
-                if (!subjectData[subject]) {
-                    subjectData[subject] = { total: 0, count: 0 };
-                }
-                subjectData[subject].total += test.percentage;
-                subjectData[subject].count += 1;
             });
             
             const averageRank = history.length > 0 ? (totalRank / history.length).toFixed(1) : "N/A";
@@ -986,8 +932,9 @@
             document.getElementById('average-rank').textContent = averageRank;
             document.getElementById('average-percentage').textContent = `${averagePercentage}%`;
             
-            if (window.scoresChartInstance) window.scoresChartInstance.destroy();
-            window.scoresChartInstance = new Chart(document.getElementById('scores-chart').getContext('2d'), {
+            const scoresChartCanvas = document.getElementById('scores-chart');
+            if(window.scoresChartInstance) window.scoresChartInstance.destroy();
+            window.scoresChartInstance = new Chart(scoresChartCanvas.getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: recentLabels,
@@ -997,19 +944,9 @@
                         borderColor: 'var(--primary-color)',
                         backgroundColor: 'rgba(74, 144, 226, 0.2)',
                         tension: 0.3,
-                        pointStyle: 'circle',
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
                         fill: true
                     }]
                 },
-                options: { responsive: true, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Percentage (%)' } }, x: { title: { display: true, text: 'Tests' } } } }
-            });
-
-            if (window.subjectChartInstance) window.subjectChartInstance.destroy();
-            window.subjectChartInstance = new Chart(document.getElementById('subject-performance-chart').getContext('2d'), {
-                type: 'bar',
-                data: { labels: Object.keys(subjectData), datasets: [{ label: 'Average Score (%)', data: Object.values(subjectData).map(s => (s.total / s.count).toFixed(0)), backgroundColor: 'var(--purple-color)', borderColor: 'var(--purple-color)', borderWidth: 1 }] },
                 options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
             });
 
@@ -1169,9 +1106,6 @@
                 passBenefitsSection.style.display = 'block';
                 paymentSection.style.display = 'none';
              });
-        } else if (pageId === 'pass-payment-section') {
-            passBenefitsSection.style.display = 'none';
-            paymentSection.style.display = 'block';
         }
 
         navTabs.forEach(tab => {
@@ -1441,7 +1375,6 @@
             if (!isActive) {
                 passBenefitsSection.style.display = 'none';
                 paymentSection.style.display = 'block';
-                history.pushState({ page: 'pass-payment-section' }, '', '#pass-payment-section');
             } else {
                 alert('Your pass is already active!');
             }
@@ -1488,22 +1421,15 @@
         await fetchData();
         await checkPassStatus();
         const initialPage = window.location.hash.substring(1) || 'home';
-        if (initialPage === 'pass-payment-section') {
-            history.replaceState({ page: 'pass-subscription' }, '', '#pass-subscription');
-        } else {
-            history.replaceState({ page: initialPage }, '', `#${initialPage}`);
-        }
+        history.replaceState({ page: initialPage }, '', `#${initialPage}`);
         renderMenuTabs();
         renderPageContent();
         showPage(initialPage);
     }
 
-    const mcqMasterContainerEl = document.getElementById('mcq-master-container');
-    const mcqToggleHeaderEl = document.getElementById('mcq-toggle-header');
-
-    mcqToggleHeaderEl.addEventListener('click', () => {
-        mcqMasterContainerEl.classList.toggle('is-visible');
-        mcqToggleHeaderEl.classList.toggle('active');
+    mcqToggleHeader.addEventListener('click', () => {
+        mcqMasterContainer.classList.toggle('is-visible');
+        mcqToggleHeader.classList.toggle('active');
     });
 
     const activateCodeBtn = document.getElementById('activate-code-btn');
@@ -1511,37 +1437,39 @@
     const activationMessage = document.getElementById('activation-message');
 
     activateCodeBtn.addEventListener('click', async () => {
-        checkPassStatus().then(isActive => {
-            if (isActive) {
-                activationMessage.textContent = "Your pass is already active!";
-                activationMessage.style.color = 'var(--warning-color)';
-                return;
-            }
-            const code = uniqueCodeInput.value.trim().toUpperCase();
-            activationMessage.textContent = 'Verifying code...';
-            activationMessage.style.color = 'var(--text-secondary)';
-            
-            activatePass(code).then(result => {
-                activationMessage.textContent = result.message;
-                activationMessage.style.color = result.success ? 'var(--success-color)' : 'var(--danger-color)';
-                if (result.success) {
-                    setTimeout(() => {
-                        renderPageContent();
-                        updateProfilePage();
-                        navigateTo('home', false);
-                        passBenefitsSection.style.display = 'block';
-                        paymentSection.style.display = 'none';
-                        activationMessage.textContent = '';
-                    }, 2000);
-                }
-            });
-        });
+        const isActive = await checkPassStatus();
+        if (isActive) {
+            activationMessage.textContent = "Your pass is already active!";
+            activationMessage.style.color = 'var(--warning-color)';
+            return;
+        }
+        const code = uniqueCodeInput.value.trim().toUpperCase();
+        if(!code) {
+             activationMessage.textContent = "Please enter a code.";
+             activationMessage.style.color = 'var(--danger-color)';
+             return;
+        }
+        activationMessage.textContent = 'Verifying code...';
+        activationMessage.style.color = 'var(--text-secondary)';
+        
+        const result = await activatePass(code);
+        activationMessage.textContent = result.message;
+        activationMessage.style.color = result.success ? 'var(--success-color)' : 'var(--danger-color)';
+        if (result.success) {
+            setTimeout(() => {
+                renderPageContent();
+                updateProfilePage();
+                navigateTo('home', false);
+                passBenefitsSection.style.display = 'block';
+                paymentSection.style.display = 'none';
+                activationMessage.textContent = '';
+                uniqueCodeInput.value = '';
+            }, 2000);
+        }
     });
 
-    // Profile Page Action Buttons
     document.getElementById('share-app-btn').addEventListener('click', () => {
-        // --- TODO: REPLACE WITH YOUR APP'S LINK ---
-        const appUrl = 'https://play.google.com/store/apps/your-app-id';
+        const appUrl = window.location.href; 
         if (navigator.share) {
             navigator.share({
                 title: 'Check out this Mock Test Platform!',
@@ -1554,7 +1482,6 @@
     });
 
     document.getElementById('help-btn').addEventListener('click', () => {
-        // --- TODO: REPLACE WITH YOUR WHATSAPP NUMBER/LINK ---
         const whatsappUrl = 'https://wa.me/910000000000'; // Replace with your number
         window.open(whatsappUrl, '_blank');
     });
@@ -1563,11 +1490,10 @@
     // ========== AI MCQ GENERATOR TOOL SCRIPT START =========
     // =======================================================
     let fullText = "";
-    let usedChars = 0;
-    const CHUNK_SIZE = 1500;
     
     function showError(stage, err) {
         const errBox = document.getElementById("errorBox");
+        errBox.style.display = 'block';
         errBox.textContent = `Error at: ${stage}\nMessage: ${err.message || err}`;
         console.error(stage, err);
     }
@@ -1578,7 +1504,6 @@
         document.getElementById("clearBtn").disabled = on;
     }
 
-    // Function to extract text from XML-based files like DOCX, PPTX, XLSX
     async function extractTextFromZip(file) {
         const zip = await JSZip.loadAsync(file);
         let content = '';
@@ -1607,7 +1532,7 @@
             }
             return txt;
         }
-        if (name.endsWith('.docx')) { // Mammoth is better for docx
+        if (name.endsWith('.docx')) {
             const arrayBuffer = await file.arrayBuffer();
             const result = await window.mammoth.extractRawText({ arrayBuffer });
             return result.value;
@@ -1646,46 +1571,29 @@
     async function generateMCQHandler() {
         try {
             setWorking(true);
-            document.getElementById("errorBox").textContent = "";
+            document.getElementById("errorBox").style.display = 'none';
             document.getElementById("debugRaw").textContent = "";
             const fileInput = document.getElementById("fileInput");
             if (!fileInput.files || !fileInput.files.length) throw new Error("No file selected");
             const file = fileInput.files[0];
-            if (!fullText) {
-                try {
-                    fullText = await extractTextFromFile(file);
-                    if (!fullText || !fullText.trim() || fullText.trim().length < 20) {
-                        throw new Error("Document does not contain readable text.");
-                    }
-                    usedChars = 0;
-                } catch (e) {
-                    showError("File extraction", e);
-                    return;
-                }
+            
+            fullText = await extractTextFromFile(file);
+            if (!fullText || !fullText.trim() || fullText.trim().length < 50) {
+                throw new Error("Could not extract enough readable text from the document.");
             }
-            if (usedChars >= fullText.length) {
-                alert("✅ All content from the document has been processed.");
-                return;
-            }
+            
             let count = parseInt(document.getElementById("mcqCount").value, 10);
             const language = document.getElementById("language").value;
-            const chunk = fullText.slice(usedChars, Math.min(usedChars + CHUNK_SIZE, fullText.length));
-            usedChars += chunk.length;
-
-            let mcqResult;
-            try {
-                document.getElementById("debugRaw").textContent = "Requesting MCQs from AI...";
-                mcqResult = await callLiveMCQGenerator(chunk, count, language);
-            } catch (e) {
-                showError("MCQ generation", e);
-                return;
-            }
+            
+            document.getElementById("debugRaw").textContent = "Requesting MCQs from AI... This may take a moment.";
+            const mcqResult = await callLiveMCQGenerator(fullText, count, language);
             
             const got = mcqResult.mcqs ? mcqResult.mcqs.length : 0;
             if (got === 0) {
-                document.getElementById("resultArea").textContent = `Could not generate MCQs from this chunk.`;
+                document.getElementById("resultArea").textContent = `Could not generate MCQs. Please try a different document.`;
                 return;
             }
+
             const setsKey = 'mcq_sets';
             const existingSets = JSON.parse(localStorage.getItem(setsKey) || "[]");
             const newSet = {
@@ -1699,14 +1607,13 @@
             };
             existingSets.push(newSet);
             localStorage.setItem(setsKey, JSON.stringify(existingSets));
+            
             alert(`Successfully generated ${newSet.generated} MCQs! Find the new test under the 'Custom' tab or on the Home page.`);
             activeTestCategory = 'All';
             renderMenuTabs();
             renderPageContent();
             document.getElementById("resultArea").textContent = `Generated ${newSet.generated} MCQs.`;
-            if (usedChars >= fullText.length) {
-                alert("✅ All chunks processed.");
-            }
+
         } catch (err) {
             showError("Main Handler", err);
         } finally {
@@ -1715,11 +1622,9 @@
     }
 
     function clearAllGeneratorState() {
-        if (!confirm("This will clear the currently loaded document text and reset the MCQ generator. Are you sure?")) return;
         fullText = "";
-        usedChars = 0;
         document.getElementById("resultArea").innerHTML = "";
-        document.getElementById("errorBox").textContent = "";
+        document.getElementById("errorBox").style.display = 'none';
         document.getElementById("debugRaw").textContent = "";
         document.getElementById("fileInput").value = "";
     }
@@ -1727,150 +1632,6 @@
     document.getElementById("generateBtn").addEventListener("click", generateMCQHandler);
     document.getElementById("clearBtn").addEventListener("click", clearAllGeneratorState);
 
-    // =======================================================
-    // ========== CHATTUTOR (DOUBT SECTION) SCRIPT START =========
-    // =======================================================
-    const chatContainer = document.getElementById("chat-container");
-    const userInput = document.getElementById("user-input");
-    const chattutorFileInput = document.getElementById("chattutor-file-input");
-    const selectedImageContainer = document.getElementById("selected-image-container");
-    let selectedImage = null;
-
-    chattutorFileInput.addEventListener('change', handleImageSelection);
-
-    function handleKeyPress(event) {
-        if (event.key === 'Enter') {
-            sendMessage();
-        }
-    }
-
-    function showTypingIndicator() {
-        const typingIndicator = document.createElement("div");
-        typingIndicator.className = "typing-indicator";
-        typingIndicator.id = "typing-indicator";
-        typingIndicator.innerHTML = 'AI is typing<span class="typing-dots"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span>';
-        chatContainer.appendChild(typingIndicator);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    function hideTypingIndicator() {
-        const typingIndicator = document.getElementById("typing-indicator");
-        if (typingIndicator) {
-            typingIndicator.remove();
-        }
-    }
-
-    function handleImageSelection(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        if (!file.type.match('image.*')) {
-            addAIMessage("Please upload an image file (JPEG, PNG, etc.).");
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            selectedImage = {
-                file: file,
-                dataUrl: e.target.result
-            };
-            selectedImageContainer.innerHTML = `<div class="selected-image"><img src="${e.target.result}" alt="Selected Image"><span>Image selected</span><span class="remove-image" onclick="removeSelectedImage()">✕</span></div>`;
-        };
-        reader.readAsDataURL(file);
-    }
-
-    function removeSelectedImage() {
-        selectedImage = null;
-        selectedImageContainer.innerHTML = '';
-        chattutorFileInput.value = '';
-    }
-
-    async function extractTextFromImage(imageFile) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const res = await Tesseract.recognize(imageFile, 'eng');
-                resolve(res.data.text);
-            } catch (error) {
-                console.error('Error with Tesseract.js OCR:', error);
-                resolve(null);
-            }
-        });
-    }
-
-    async function sendMessage() {
-        const text = userInput.value.trim();
-        const hasImage = selectedImage !== null;
-        if (text === "" && !hasImage) return;
-
-        let finalMessage = text;
-        let imageBase64 = null;
-        if (hasImage) {
-            addUserMessageWithImage(text, selectedImage.dataUrl);
-            showTypingIndicator();
-            try {
-                const extractedText = await extractTextFromImage(selectedImage.file);
-                if (extractedText) {
-                    if (text) {
-                        finalMessage = `Text from user: "${text}"\n\nText extracted from image: "${extractedText}"\n\nPlease provide a combined response based on both inputs.`;
-                    } else {
-                        finalMessage = `Text extracted from image: "${extractedText}"\n\nPlease respond to this.`;
-                    }
-                    imageBase64 = selectedImage.dataUrl;
-                } else if (!text) {
-                    finalMessage = "I've uploaded an image but couldn't extract text from it. Please describe what you need help with.";
-                }
-            } catch (error) {
-                console.error('Error processing image:', error);
-                if (!text) {
-                    finalMessage = "I encountered an error while processing the image. Please describe what you need help with.";
-                }
-            }
-            removeSelectedImage();
-        } else {
-            addUserMessageWithImage(text, null);
-            showTypingIndicator();
-        }
-        userInput.value = "";
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-        
-        try {
-            const response = await fetch(CHAT_TUTOR_ENDPOINT, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-                },
-                body: JSON.stringify({ message: finalMessage, image: imageBase64 })
-            });
-            const data = await response.json();
-            addAIMessage(data.response);
-        } catch(e) {
-            console.error('Chat API failed:', e);
-            addAIMessage("Sorry, I am unable to connect to the chat service right now. Please try again later.");
-        }
-    }
-
-    function addAIMessage(message) {
-        hideTypingIndicator();
-        const aiMsg = document.createElement("div");
-        aiMsg.className = "chattutor-message ai";
-        aiMsg.innerText = message;
-        chatContainer.appendChild(aiMsg);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    function addUserMessageWithImage(text, imageDataUrl) {
-        const userMsg = document.createElement("div");
-        userMsg.className = "chattutor-message user";
-        if (text && imageDataUrl) {
-            userMsg.innerHTML = `<div>${text}</div><div class="image-container"><img src="${imageDataUrl}" alt="Uploaded Image" class="image-preview"></div>`;
-        } else if (imageDataUrl) {
-            userMsg.innerHTML = `<div class="image-container"><img src="${imageDataUrl}" alt="Uploaded Image" class="image-preview"></div>`;
-        } else {
-            userMsg.innerText = text;
-        }
-        chatContainer.appendChild(userMsg);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
     </script>
 </body>
 </html>
