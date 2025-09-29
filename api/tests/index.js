@@ -1,8 +1,4 @@
-// filename: api/tests/index.js
-
 export default async function handler(req, res) {
-    // This is a list of your test sets available on Cloudflare R2.
-    // The "id" must exactly match the .json filename in your R2 bucket (e.g., "ssc_cgl_2023_full.json").
     const testsData = {
         "PYQ Full Set": [
             { 
