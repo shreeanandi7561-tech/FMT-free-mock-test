@@ -1,12 +1,5 @@
-// filename: api/generate-mcq.js
-
-// Helper function to call Google Gemini API
 async function callGemini(text, count, language, apiKey) {
-    
-// Flash मॉडल के लिए यह सही और आधिकारिक नाम है
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
-    
-    // This is the strict prompt you requested
     const prompt = `
         You are an expert MCQ (Multiple Choice Questions) creator for competitive exams.
         Your task is to generate ${count} high-quality and important multiple-choice questions based ONLY on the following text.
@@ -87,16 +80,12 @@ export default async function handler(req, res) {
             return res.status(400).json({ success: false, message: 'Missing required parameters: text, count, or language.' });
         }
 
-        const aiResponse = await callGemini(text, count, language, GEMINI_API_KEY);
-        
-        // The Gemini response structure is nested, so we extract the 'mcqs' part
+        const aiResponse = await callGemini(text, count, language, GEMINI_API_KEY
         const mcqs = aiResponse?.candidates?.[0]?.content?.parts?.[0]?.text;
         
         if (!mcqs) {
              return res.status(500).json({ success: false, message: 'AI did not return a valid MCQ structure. It might be due to content policy or invalid input.' });
         }
-        
-        // The response from Gemini is a JSON string, so we parse it.
         const parsedMcqs = JSON.parse(mcqs);
 
         if (!parsedMcqs.mcqs || parsedMcqs.mcqs.length === 0) {
