@@ -5,7 +5,6 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl || '', supabaseServiceKey || '');
 
-// Helper to get user ID from token
 function getUserIdFromToken(authHeader) {
     if (!authHeader) return null;
     const token = authHeader.split(' ')[1];
@@ -18,9 +17,7 @@ function getUserIdFromToken(authHeader) {
     }
 }
 
-
 export default async function handler(req, res) {
-    // CORS Headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -34,17 +31,16 @@ export default async function handler(req, res) {
     }
 
     const userId = getUserIdFromToken(req.headers.authorization);
-
     if (!userId) {
         return res.status(401).json({ message: 'Authentication required.' });
     }
 
     try {
         const { data, error } = await supabase
-            .from('test_results') // Ensure you have a 'test_results' table
+            .from('test_results')
             .select('*')
             .eq('user_id', userId)
-            .order('created_at', { ascending: false }); // Get newest first
+            .order('created_at', { ascending: false });
 
         if (error) {
             console.error('Error fetching test history:', error);
