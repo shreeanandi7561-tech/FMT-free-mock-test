@@ -11,9 +11,13 @@
     }
   ],
   "routes": [
-    { "src": "/api/auth/(.*)", "dest": "/api/auth/$1.js" },
-    { "src": "/api/tests/(.*)", "dest": "/api/tests/$1.js" },
-    { "src": "/api/generate-mcq", "dest": "/api/generate-mcq.js" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ]
 }
