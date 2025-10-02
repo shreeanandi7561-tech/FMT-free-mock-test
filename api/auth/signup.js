@@ -7,7 +7,7 @@ const supabase = createClient(supabaseUrl || '', supabaseServiceKey || '');
 
 const SALT_ROUNDS = 10;
 
-module.exports = async function handler(req, res) {
+module.exports = async function handler
   // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
