@@ -1,7 +1,7 @@
 {
   "name": "fmt-free-mock-test",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
     "@supabase/supabase-js": "^2.0.0",
     "bcrypt": "^5.1.1"
