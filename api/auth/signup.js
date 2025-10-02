@@ -1,79 +1,68 @@
-import { createClient } from '@supabase/supabase-js';
+// /api/signup.js
 import bcrypt from 'bcrypt';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabase = createClient(supabaseUrl || '', supabaseServiceKey || '');
+import { signToken, getSupabaseService } from './_lib/auth';
 
 const SALT_ROUNDS = 10;
 
 export default async function handler(req, res) {
-  // CORS Headers
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
+  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, error: 'Method not allowed. Use POST.' });
+    return res.status(405).json({ success: false, error: 'Use POST' });
   }
 
   try {
-    const { name, email, mobile, password } = req.body;
+    const { name = '', email = '', mobile = '', password = '' } = req.body || {};
+    const trimmedName = String(name).trim();
+    const trimmedMobile = String(mobile).trim();
+    const trimmedEmail = String(email || '').trim().toLowerCase();
 
-    if (!name || !mobile || !password) {
-      return res.status(400).json({ success: false, message: 'Name, mobile, and password are required.' });
+    if (!trimmedName || !trimmedMobile || !password) {
+      return res.status(400).json({ success: false, message: 'Name, mobile, password required' });
     }
+    if (password.length < 6) {
+      return res.status(400).json({ success: false, message: 'Password must be 6+ chars' });
+    }
+    // Simple mobile normalization: remove spaces; add your E.164 normalizer if needed
+    const normalizedMobile = trimmedMobile.replace(/s+/g, '');
 
-    const { data: existingUser } = await supabase
+    const supabase = getSupabaseService();
+    const { data: existingUser, error: findErr } = await supabase
       .from('users')
       .select('id')
-      .eq('mobile_number', mobile)
+      .eq('mobile_number', normalizedMobile)
       .maybeSingle();
 
+    if (findErr) {
+      return res.status(500).json({ success: false, message: 'DB error (check user)' });
+    }
     if (existingUser) {
-      return res.status(400).json({ success: false, message: 'User with this mobile number already exists.' });
+      return res.status(409).json({ success: false, message: 'Mobile already registered' });
     }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-
-    const { data: insertData, error: insertError } = await supabase
+    const hashed = await bcrypt.hash(password, SALT_ROUNDS);
+    const { data: inserted, error: insErr } = await supabase
       .from('users')
-      .insert([{
-        full_name: name,
-        email: email || null,
-        mobile_number: mobile,
-        password: hashedPassword,
+      .insert({
+        name: trimmedName,
+        email: trimmedEmail || null,
+        mobile_number: normalizedMobile,
+        password_hash: hashed,
         is_premium: false
-      }])
-      .select('*')
+      })
+      .select('id, mobile_number')
       .single();
 
-    if (insertError) {
-      throw insertError;
+    if (insErr || !inserted) {
+      return res.status(500).json({ success: false, message: 'DB error (insert user)' });
     }
 
-    const token = Buffer.from(JSON.stringify({ id: insertData.id, mobile: mobile })).toString('base64');
-
-    return res.status(200).json({
-      success: true,
-      message: 'Account created successfully!',
-      token: token,
-      user: {
-        id: insertData.id,
-        name: insertData.full_name,
-        email: insertData.email,
-        mobile: insertData.mobile_number,
-        joinedAt: insertData.created_at
-      }
-    });
-
-  } catch (error) {
-    console.error('Signup error:', error);
-    return res.status(500).json({ success: false, message: `Server error: ${error.message}` });
+    const token = signToken({ id: inserted.id, mobile: inserted.mobile_number });
+    return res.status(201).json({ success: true, token });
+  } catch (e) {
+    return res.status(500).json({ success: false, message: 'Unexpected error' });
   }
 }
