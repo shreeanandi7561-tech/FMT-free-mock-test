@@ -1,66 +1,50 @@
-import { createClient } from '@supabase/supabase-js';
-import { Buffer } from 'buffer';
+// /api/submit.js
+import { getSupabaseService, verifyTokenFromAuthHeader } from './_lib/auth';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabase = createClient(supabaseUrl || '', supabaseServiceKey || '');
+function validatePayload(body = {}) {
+  const errors = [];
+  const test_id = String(body.test_id || '').trim();
+  const subject = String(body.subject || '').trim();
+  const marks = Number(body.marks);
+  const percentage = Number(body.percentage);
+  const time_taken = Number(body.time_taken);
+  const rank = Number(body.rank);
 
-function getUserIdFromToken(authHeader) {
-    if (!authHeader) return null;
-    const token = authHeader.split(' ')[1];
-    if (!token) return null;
-    try {
-        const decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
-        return decoded.id;
-    } catch (e) {
-        return null;
-    }
+  if (!test_id) errors.push('test_id required');
+  if (!subject) errors.push('subject required');
+  if (!Number.isFinite(marks) || marks < 0) errors.push('marks must be >= 0');
+  if (!Number.isFinite(percentage) || percentage < 0 || percentage > 100) errors.push('percentage 0..100');
+  if (!Number.isFinite(time_taken) || time_taken < 0 || time_taken > 86400) errors.push('time_taken 0..86400');
+  if (!Number.isFinite(rank) || rank < 0) errors.push('rank must be >= 0');
+
+  return { ok: errors.length === 0, errors, payload: { test_id, subject, marks, percentage, time_taken, rank } };
 }
 
 export default async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ message: 'Use POST' });
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
+  const userId = verifyTokenFromAuthHeader(req.headers.authorization);
+  if (!userId) return res.status(401).json({ message: 'Unauthorized' });
 
-    if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Method Not Allowed' });
-    }
-    
-    const userId = getUserIdFromToken(req.headers.authorization);
+  const v = validatePayload(req.body);
+  if (!v.ok) return res.status(400).json({ message: 'Invalid payload', errors: v.errors });
 
-    if (!userId) {
-        return res.status(401).json({ message: 'Authentication required.' });
-    }
+  const supabase = getSupabaseService();
+  const { error } = await supabase.from('test_results').insert({
+    user_id: userId,
+    test_id: v.payload.test_id,
+    subject: v.payload.subject,
+    marks: v.payload.marks,
+    percentage: v.payload.percentage,
+    time_taken: v.payload.time_taken,
+    rank: v.payload.rank,
+    created_at: new Date().toISOString()
+  });
 
-    try {
-        const { testId, testName, subject, score, rank, percentage, timeTaken } = req.body;
-        
-        const { error } = await supabase
-            .from('test_results')
-            .insert([{ 
-                user_id: userId,
-                test_id: testId,
-                test_name: testName,
-                subject: subject,
-                score: score,
-                rank: rank,
-                percentage: percentage,
-                time_taken_seconds: timeTaken
-                
-
-        if (error) {
-            console.error('Error saving test result:', error);
-            return res.status(500).json({ success: false, message: 'Failed to save test result.' });
-        }
-
-        return res.status(200).json({ success: true });
-
-    } catch (e) {
-        console.error('Server error on submit:', e);
-        return res.status(500).json({ success: false, message: 'Internal server error.' });
-    }
+  if (error) return res.status(500).json({ message: 'DB error (insert result)' });
+  return res.status(201).json({ success: true });
 }
