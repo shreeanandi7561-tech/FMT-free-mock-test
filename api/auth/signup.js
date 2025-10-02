@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
-import bcrypt from 'bcrypt';
+const { createClient } = require('@supabase/supabase-js');
+const bcrypt = require('bcrypt');
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -7,7 +7,7 @@ const supabase = createClient(supabaseUrl || '', supabaseServiceKey || '');
 
 const SALT_ROUNDS = 10;
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -76,4 +76,4 @@ export default async function handler(req, res) {
     console.error('Signup error:', error);
     return res.status(500).json({ success: false, message: `Server error: ${error.message}` });
   }
-}
+};
