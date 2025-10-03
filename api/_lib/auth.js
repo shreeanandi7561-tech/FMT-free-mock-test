@@ -1,23 +1,22 @@
-import jwt from 'jsonwebtoken';
-import { createClient } from '@supabase/supabase-js';
-
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) { throw new Error('JWT_SECRET missing'); }
-
-export function signToken(payload, expiresIn = '7d') {
-  return jwt.sign(payload, JWT_SECRET, { algorithm: 'HS256', expiresIn });
+// /api/_lib/http.js
+export function ok(res, data = {}, status = 200) {
+  res.setHeader('Content-Type', 'application/json');
+  return res.status(status).end(JSON.stringify(data));
 }
-
-export function verifyTokenFromAuthHeader(authHeader) {
-  if (!authHeader) return null;
-  const parts = authHeader.split(' ');
-  if (parts.length !== 2 || parts[0] !== 'Bearer') return null;
-  try { const decoded = jwt.verify(parts[1], JWT_SECRET, { algorithms: ['HS256'] }); return decoded?.id || null; }
-  catch { return null; }
+export function err(res, message = 'Unexpected error', status = 500, extra = {}) {
+  res.setHeader('Content-Type', 'application/json');
+  return res.status(status).end(JSON.stringify({ success: false, message, ...extra }));
 }
-
-export function getSupabaseService() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-  return createClient(supabaseUrl, supabaseServiceKey);
+export function withCors(req, res, methods = 'GET, POST, OPTIONS', headers = 'Content-Type, Authorization, x-admin-token') {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', methods);
+  res.setHeader('Access-Control-Allow-Headers', headers);
+  if (req.method === 'OPTIONS') return ok(res, { success: true }, 200);
+  return null;
+}
+export function methodGuard(req, res, allowed = ['GET']) {
+  if (!allowed.includes(req.method)) {
+    return err(res, `Use ${allowed.join('/')}`, 405);
+  }
+  return null;
 }
