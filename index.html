@@ -554,11 +554,40 @@
     </div>
 
     <script defer>
-    
+    // =======================================================
+    // ========== HELPER FUNCTION & API ENDPOINTS ============
+    // =======================================================
+    const AUTH_API_ENDPOINT = "/api/auth";
+    const TEST_API_ENDPOINT = "/api/tests";
+    const PASS_API_ENDPOINT = "/api/pass";
+    const MCQ_GENERATOR_ENDPOINT = "/api/generate-mcq";
+
+    /**
+     * Safely fetches data and handles JSON/non-JSON responses.
+     * Throws an error for non-ok responses.
+     */
+    async function safeJsonFetch(url, options = {}) {
+        const response = await fetch(url, options);
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || `API error with status ${response.status}`);
+            }
+            return data;
+        }
+        const textData = await response.text();
+        if (!response.ok) {
+            throw new Error(textData || `API error with status ${response.status}`);
+        }
+        // Handle cases where a non-JSON response is still a success (if any)
+        // For this app, we assume successful responses are always JSON.
+        return textData; 
+    }
+
     // =======================================================
     // ========== AUTHENTICATION SCRIPT START ================
     // =======================================================
-    const AUTH_API_ENDPOINT = "/api/auth";
     let currentUser = null;
     const authModal = document.getElementById('auth-modal');
     const mainApp = document.getElementById('main-app');
@@ -648,12 +677,11 @@
         loginBtn.textContent = 'Logging In...';
 
         try {
-            const response = await fetch(`${AUTH_API_ENDPOINT}/login`, {
+            const data = await safeJsonFetch(`${AUTH_API_ENDPOINT}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mobile, password })
             });
-            const data = await response.json();
 
             if (data.success) {
                 localStorage.setItem('authToken', data.token);
@@ -662,11 +690,11 @@
                 hideAuthModal();
                 mainApp.style.display = 'block';
                 initializeApp();
-            } else {
+            } else { // Although safeJsonFetch throws for non-ok, we handle explicit success:false
                 loginError.textContent = data.message || "Login failed. Please check your credentials.";
             }
         } catch (error) {
-            loginError.textContent = "An error occurred. Please try again later.";
+            loginError.textContent = error.message || "An error occurred. Please try again later.";
             console.error('Login failed:', error);
         } finally {
             loginBtn.disabled = false;
@@ -689,12 +717,11 @@
         signupBtn.textContent = 'Signing Up...';
 
         try {
-            const response = await fetch(`${AUTH_API_ENDPOINT}/signup`, {
+            const data = await safeJsonFetch(`${AUTH_API_ENDPOINT}/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, mobile, password })
             });
-            const data = await response.json();
 
             if (data.success) {
                 localStorage.setItem('authToken', data.token);
@@ -707,7 +734,7 @@
                 signupError.textContent = data.message || "Sign up failed. User may already exist.";
             }
         } catch (error) {
-            signupError.textContent = "An error occurred. Please try again later.";
+            signupError.textContent = error.message || "An error occurred. Please try again later.";
             console.error('Signup failed:', error);
         } finally {
             signupBtn.disabled = false;
@@ -727,12 +754,11 @@
         resetPasswordBtn.textContent = 'Resetting...';
 
         try {
-            const response = await fetch(`${AUTH_API_ENDPOINT}/forgot-password`, {
+            const data = await safeJsonFetch(`${AUTH_API_ENDPOINT}/forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mobile, newPassword })
             });
-            const data = await response.json();
 
             if (data.success) {
                 forgotError.style.color = 'var(--success-color)';
@@ -745,7 +771,7 @@
                 forgotError.textContent = data.message || "Failed to reset password.";
             }
         } catch (error) {
-            forgotError.textContent = "An error occurred. Please try again.";
+            forgotError.textContent = error.message || "An error occurred. Please try again.";
             console.error('Password reset failed:', error);
         } finally {
             resetPasswordBtn.disabled = false;
@@ -813,33 +839,24 @@
     let totalTestTime = 0;
     let testStartTime = 0;
     
-    const TEST_API_ENDPOINT = "/api/tests";
-    const PASS_API_ENDPOINT = "/api/pass";
-    const MCQ_GENERATOR_ENDPOINT = "/api/generate-mcq";
-
     let allTests = {};
 
     async function fetchData() {
         try {
-            const testsResponse = await fetch(`${TEST_API_ENDPOINT}/`);
-            if (!testsResponse.ok) {
-                throw new Error(`API for test list failed with status ${testsResponse.status}`);
-            }
-            allTests = await testsResponse.json();
+            allTests = await safeJsonFetch(`${TEST_API_ENDPOINT}/`);
         } catch(e) {
             console.error("Failed to fetch test data from API:", e);
-            testSectionsContainer.innerHTML = `<div class="card"><p>Could not load test sets. Please check your connection or contact support.</p></div>`;
+            testSectionsContainer.innerHTML = `<div class="card"><p>Could not load test sets. Error: ${e.message}</p></div>`;
         }
     }
     
     async function checkPassStatus() {
         if (!currentUser) return false;
         try {
-            const response = await fetch(`${PASS_API_ENDPOINT}/status`, {
+            const data = await safeJsonFetch(`${PASS_API_ENDPOINT}/status`, {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
             });
-            const data = await response.json();
             hasPremiumPass = data.isActive;
             localStorage.setItem('premium_pass_status', hasPremiumPass);
             return data.isActive;
@@ -852,12 +869,11 @@
 
     async function activatePass(code) {
         try {
-            const response = await fetch(`${PASS_API_ENDPOINT}/activate`, {
+            const data = await safeJsonFetch(`${PASS_API_ENDPOINT}/activate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('authToken')}` },
                 body: JSON.stringify({ code })
             });
-            const data = await response.json();
             if (data.success) {
                 hasPremiumPass = true;
                 localStorage.setItem('premium_pass_status', 'true');
@@ -867,7 +883,7 @@
             }
         } catch (e) {
             console.error('Pass activation failed:', e);
-            return { success: false, message: "An error occurred. Please try again later." };
+            return { success: false, message: e.message || "An error occurred. Please try again later." };
         }
     }
     
@@ -885,11 +901,10 @@
         passStatusEl.className = `pass-status ${isActive ? 'active' : 'inactive'}`;
         
         try {
-            const response = await fetch(`${TEST_API_ENDPOINT}/history`, {
+            const history = await safeJsonFetch(`${TEST_API_ENDPOINT}/history`, {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
             });
-            const history = await response.json();
             
             if (!history || history.length === 0) {
                  document.getElementById('average-rank').textContent = "N/A";
@@ -1268,10 +1283,8 @@
 
     async function startTest(testId, testName, testSubject) {
         try {
-            const response = await fetch(`${TEST_API_ENDPOINT}/mcq?subject=${testId}`);
-            if(!response.ok) throw new Error("Could not fetch questions from the server.");
+            const fetchedQuestions = await safeJsonFetch(`${TEST_API_ENDPOINT}/mcq?subject=${testId}`);
             
-            const fetchedQuestions = await response.json();
             if(!fetchedQuestions || fetchedQuestions.length === 0) {
                  alert('This test set has no questions!');
                  return;
@@ -1350,7 +1363,7 @@
         const formattedTimeTaken = formatTime(timeTakenInSeconds);
         
         try {
-            await fetch(`${TEST_API_ENDPOINT}/submit`, {
+            await safeJsonFetch(`${TEST_API_ENDPOINT}/submit`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('authToken')}` },
                 body: JSON.stringify({ 
@@ -1593,7 +1606,7 @@
     }
     
     async function callLiveMCQGenerator(text, count, language) {
-        const response = await fetch(MCQ_GENERATOR_ENDPOINT, {
+        return await safeJsonFetch(MCQ_GENERATOR_ENDPOINT, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1601,11 +1614,6 @@
             },
             body: JSON.stringify({ text, count, language })
         });
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || "Failed to generate MCQs from API.");
-        }
-        return response.json();
     }
 
     async function generateMCQHandler() {
@@ -1629,6 +1637,7 @@
             const result = await callLiveMCQGenerator(fullText, count, language);
             
             if(!result.success) {
+                // This case might not be reached if safeJsonFetch throws first, but good for explicit API errors
                 throw new Error(result.message);
             }
 
@@ -1676,142 +1685,6 @@
 
     document.getElementById("generateBtn").addEventListener("click", generateMCQHandler);
     document.getElementById("clearBtn").addEventListener("click", clearAllGeneratorState);
-
-
-        <script>
-// ---------- JSON-safe fetch: non-JSON par bhi crash nahi ----------
-async function safeJsonFetch(url, options = {}) {
-  const r = await fetch(url, {
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }
-  });
-  const ct = r.headers.get('content-type') || '';
-  if (ct.includes('application/json')) {
-    const data = await r.json();
-    if (!r.ok) throw new Error(data?.message || data?.error || `HTTP ${r.status}`);
-    return data;
-  } else {
-    const text = await r.text();
-    throw new Error(text || `HTTP ${r.status}`);
-  }
-}
-
-// ---------- Small helpers ----------
-const Q = (sel) => document.querySelector(sel);
-const sval = (sel, d='') => (Q(sel)?.value ?? d).toString();
-const nval = (sel, d=0) => { const v = Number(sval(sel, d)); return Number.isFinite(v) ? v : Number(d); };
-const setToken = (t) => { try { localStorage.setItem('token', t||''); } catch{} };
-const getToken = () => { try { return localStorage.getItem('token') || ''; } catch { return ''; } };
-const msg = (t) => { try { alert(t); } catch{} };
-
-// ---------- Signup / Login ----------
-async function onSignup() {
-  try {
-    const payload = {
-      name: sval('#name').trim(),                 // update IDs if different
-      email: sval('#email').trim(),
-      mobile: sval('#mobile').trim(),
-      password: sval('#password')
-    };
-    if (!payload.name || !payload.mobile || !payload.password) return msg('Name, Mobile, Password required');
-    const resp = await safeJsonFetch('/api/signup', { method: 'POST', body: JSON.stringify(payload) });
-    setToken(resp.token); msg('Signup success');
-  } catch (e) { msg('Signup failed: ' + (e.message || 'Unknown error')); }
-}
-async function onLogin() {
-  try {
-    const payload = {
-      mobile: sval('#loginMobile').trim(),       // update IDs if different
-      password: sval('#loginPassword')
-    };
-    if (!payload.mobile || !payload.password) return msg('Mobile & Password required');
-    const resp = await safeJsonFetch('/api/login', { method: 'POST', body: JSON.stringify(payload) });
-    setToken(resp.token); msg('Login success');
-  } catch (e) { msg('Login failed: ' + (e.message || 'Unknown error')); }
-}
-
-// ---------- Pass status / Activation ----------
-async function checkStatus() {
-  try {
-    const token = getToken();
-    const resp = await safeJsonFetch('/api/status', { headers: { Authorization: 'Bearer ' + token } });
-    msg('Premium: ' + (resp.is_premium ? 'Active' : 'Inactive'));
-  } catch (e) { msg('Failed to check pass status: ' + (e.message || 'Unknown error')); }
-}
-async function activatePass() {
-  try {
-    const token = getToken();
-    const code = sval('#passCode').trim();       // update ID if different
-    if (!code) return msg('Enter code');
-    const resp = await safeJsonFetch('/api/activate', {
-      method: 'POST', headers: { Authorization: 'Bearer ' + token }, body: JSON.stringify({ code })
-    });
-    msg(resp.message || 'Premium activated');
-  } catch (e) { msg('Pass activation failed: ' + (e.message || 'Unknown error')); }
-}
-
-// ---------- AI MCQ generate / Subject MCQ fetch ----------
-async function generateMCQ() {
-  try {
-    const text = sval('#mcqSource').trim();      // text/textarea id
-    const count = nval('#mcqCount', 5);          // select/input id
-    const language = sval('#mcqLang', 'English');// select/input id
-    if (!text) return msg('Enter text for MCQ generation');
-    const resp = await safeJsonFetch('/api/generate-mcq', { method: 'POST', body: JSON.stringify({ text, count, language }) });
-    // Render as needed; for now
-    msg(`Generated ${Array.isArray(resp.mcqs) ? resp.mcqs.length : 0} MCQs`);
-  } catch (e) { msg('MCQ Generation error: ' + (e.message || 'Unknown error')); }
-}
-async function fetchSubjectMCQ() {
-  try {
-    const subject = sval('#subjectKey').trim();  // subject key/select id
-    if (!subject) return msg('Select/enter subject');
-    const resp = await safeJsonFetch('/api/mcq?subject=' + encodeURIComponent(subject));
-    // Render resp as needed
-    msg('Fetched subject MCQs');
-  } catch (e) { msg('Fetch MCQ error: ' + (e.message || 'Unknown error')); }
-}
-
-// ---------- Results: submit / history ----------
-async function submitResult() {
-  try {
-    const token = getToken();
-    const body = {
-      test_id: sval('#testId').trim(),
-      subject: sval('#testSubject').trim(),
-      marks: nval('#testMarks', 0),
-      percentage: nval('#testPercent', 0),
-      time_taken: nval('#testTime', 0),
-      rank: nval('#testRank', 0)
-    };
-    if (!body.test_id || !body.subject) return msg('test_id & subject required');
-    await safeJsonFetch('/api/submit', {
-      method: 'POST', headers: { Authorization: 'Bearer ' + token }, body: JSON.stringify(body)
-    });
-    msg('Result submitted');
-  } catch (e) { msg('Submit failed: ' + (e.message || 'Unknown error')); }
-}
-async function fetchHistory() {
-  try {
-    const token = getToken();
-    const resp = await safeJsonFetch('/api/history', { headers: { Authorization: 'Bearer ' + token } });
-    msg('History loaded: ' + (Array.isArray(resp) ? resp.length : 0));
-  } catch (e) { msg('History error: ' + (e.message || 'Unknown error')); }
-}
-
-// ---------- Optional: auto-bind buttons if present ----------
-(function bindButtons() {
-  const map = [
-    ['#btnSignup', onSignup], ['#btnLogin', onLogin],
-    ['#btnCheckStatus', checkStatus], ['#btnActivate', activatePass],
-    ['#btnGenerate', generateMCQ], ['#btnFetchSubject', fetchSubjectMCQ],
-    ['#btnSubmitResult', submitResult], ['#btnFetchHistory', fetchHistory],
-  ];
-  for (const [sel, fn] of map) { const el = Q(sel); if (el) el.addEventListener('click', (e)=>{ e.preventDefault?.(); fn(); }); }
-})();
-</script>
-
-                
-    </script>
+      </script>
 </body>
 </html>
