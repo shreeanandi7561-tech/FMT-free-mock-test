@@ -1,25 +1,28 @@
 // /api/status.js
-import { getSupabaseService, verifyTokenFromAuthHeader } from './_lib/auth';
+import { verifyTokenFromAuthHeader, getSupabaseService } from './_lib/auth';
+import { withCors, methodGuard, ok, err } from './_lib/http';
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'GET') return res.status(405).json({ message: 'Use GET' });
+  if (withCors(req, res, 'GET, OPTIONS')) return;
+  if (methodGuard(req, res, ['GET'])) return;
 
-  const userId = verifyTokenFromAuthHeader(req.headers.authorization);
-  if (!userId) return res.status(401).json({ message: 'Unauthorized' });
+  try {
+    const id = verifyTokenFromAuthHeader?.(req.headers.authorization) 
+      || (() => { 
+          try { const t = (req.headers.authorization||'').split(' ')[1]; 
+                return JSON.parse(Buffer.from(t||'', 'base64').toString('utf-8')).id; } catch { return null; } 
+        })();
+    if (!id) return err(res, 'Unauthorized', 401);
 
-  const supabase = getSupabaseService();
-  const { data: user, error } = await supabase
-    .from('users')
-    .select('is_premium')
-    .eq('id', userId)
-    .maybeSingle();
+    const supabase = getSupabaseService?.();
+    if (!supabase) return err(res, 'Server misconfigured', 500);
 
-  if (error) return res.status(500).json({ message: 'DB error' });
-  if (!user) return res.status(404).json({ message: 'User not found' });
+    const { data: user, error } = await supabase.from('users').select('is_premium').eq('id', id).maybeSingle();
+    if (error) return err(res, 'Database error', 500);
+    if (!user) return err(res, 'User not found', 404);
 
-  return res.status(200).json({ is_premium: !!user.is_premium });
+    return ok(res, { is_premium: !!user.is_premium }, 200);
+  } catch {
+    return err(res, 'Unexpected error in status', 500);
+  }
 }
