@@ -1,9 +1,28 @@
 {
-  "name": "fmt-free-mock-test",
+  "name": "mcq-app-serverless",
   "version": "1.0.0",
-  "description": "Free Mock Test Platform",
+  "private": true,
   "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "node server.js",
+    "lint": "eslint ."
+  },
+  "engines": {
+    "node": "22.x"
+  },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0"
+    "@supabase/supabase-js": "^2.45.4",
+    "bcrypt": "^5.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^3.3.3"
   }
 }
