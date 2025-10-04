@@ -1,41 +1,50 @@
-import bcrypt from 'bcrypt';
-import { getSupabaseService } from './_lib/auth'; // or your existing
-import { withCors, methodGuard, ok, err } from './_lib/http';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = 'https://aeavbvnnnuoloouxkxgw.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlYXZidm5ubnVvbG9vdXhreGd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2NDUxNjQsImV4cCI6MjA3NDIyMTE2NH0.KuzzTBtmvvht4OnAGpwPWajItaJ5DftAYbYOdt8cVec';
 
 export default async function handler(req, res) {
-  if (withCors(req, res, 'POST, OPTIONS')) return;
-  if (methodGuard(req, res, ['POST'])) return;
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
   try {
-    const supabase = getSupabaseService?.();
-    if (!supabase) return err(res, 'Server misconfigured', 500, { code: 'NO_DB' });
+    const { email, password } = req.body;
 
-    const { mobile = '', password = '' } = req.body || {};
-    const normalizedMobile = String(mobile).trim().replace(/s+/g, '');
-    if (!normalizedMobile || !password) return err(res, 'Mobile & password required', 400);
-
-    const { data: user, error: findErr } = await supabase
-      .from('users')
-      .select('id, mobile_number, password_hash')
-      .eq('mobile_number', normalizedMobile)
-      .maybeSingle();
-
-    if (findErr) return err(res, 'Database error (find user)', 500, { code: 'DB_FIND' });
-    if (!user?.password_hash) return err(res, 'Invalid credentials', 401);
-
-    const okPw = await bcrypt.compare(password, user.password_hash);
-    if (!okPw) return err(res, 'Invalid credentials', 401);
-
-    // signToken import/use if using JWT; else temporary base64 fallback:
-    let token;
-    try {
-      const { signToken } = await import('./_lib/auth');
-      token = signToken({ id: user.id, mobile: user.mobile_number });
-    } catch {
-      token = Buffer.from(JSON.stringify({ id: user.id, mobile: user.mobile_number })).toString('base64');
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
     }
-    return ok(res, { success: true, token }, 200);
-  } catch {
-    return err(res, 'Unexpected error in login', 500, { code: 'UNEXPECTED' });
+
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      return res.status(401).json({ error: error.message });
+    }
+
+    return res.status(200).json({
+      success: true,
+      token: data.session.access_token,
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.user_metadata?.name || email.split('@')[0]
+      }
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }
