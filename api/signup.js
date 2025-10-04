@@ -1,47 +1,72 @@
-import bcrypt from 'bcrypt';
-import { getSupabaseService } from './_lib/auth';
-import { withCors, methodGuard, ok, err } from './_lib/http';
+import { createClient } from '@supabase/supabase-js';
 
-const SALT_ROUNDS = 10;
+const supabaseUrl = 'https://aeavbvnnnuoloouxkxgw.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlYXZidm5ubnVvbG9vdXhreGd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2NDUxNjQsImV4cCI6MjA3NDIyMTE2NH0.KuzzTBtmvvht4OnAGpwPWajItaJ5DftAYbYOdt8cVec';
 
 export default async function handler(req, res) {
-  if (withCors(req, res, 'POST, OPTIONS')) return;
-  if (methodGuard(req, res, ['POST'])) return;
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
   try {
-    const supabase = getSupabaseService?.();
-    if (!supabase) return err(res, 'Server misconfigured', 500, { code: 'NO_DB' });
+    const { name, email, password } = req.body;
 
-    const { name = '', email = '', mobile = '', password = '' } = req.body || {};
-    const nm = String(name).trim();
-    const em = String(email || '').trim().toLowerCase();
-    const mb = String(mobile).trim().replace(/s+/g, '');
-    if (!nm || !mb || !password) return err(res, 'Name, mobile, password required', 400);
-    if (password.length < 6) return err(res, 'Password must be 6+ chars', 400);
-
-    const { data: exist, error: findErr } = await supabase
-      .from('users').select('id').eq('mobile_number', mb).maybeSingle();
-    if (findErr) return err(res, 'Database error (check user)', 500, { code: 'DB_CHECK' });
-    if (exist) return err(res, 'Mobile already registered', 409);
-
-    const hash = await bcrypt.hash(password, SALT_ROUNDS);
-    const { data: inserted, error: insErr } = await supabase
-      .from('users')
-      .insert({ name: nm, email: em || null, mobile_number: mb, password_hash: hash, is_premium: false })
-      .select('id, mobile_number')
-      .single();
-
-    if (insErr || !inserted) return err(res, 'Database error (insert user)', 500, { code: 'DB_INSERT' });
-
-    let token;
-    try {
-      const { signToken } = await import('./_lib/auth');
-      token = signToken({ id: inserted.id, mobile: inserted.mobile_number });
-    } catch {
-      token = Buffer.from(JSON.stringify({ id: inserted.id, mobile: inserted.mobile_number })).toString('base64');
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Name, email and password are required' });
     }
-    return ok(res, { success: true, token }, 201);
-  } catch {
-    return err(res, 'Unexpected error in signup', 500, { code: 'UNEXPECTED' });
+
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name: name
+        }
+      }
+    });
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (loginError) {
+      return res.status(200).json({
+        success: true,
+        message: 'Account created! Please login.',
+        user: {
+          id: data.user.id,
+          email: data.user.email,
+          name: name
+        }
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      token: loginData.session.access_token,
+      user: {
+        id: loginData.user.id,
+        email: loginData.user.email,
+        name: name
+      }
+    });
+  } catch (error) {
+    console.error('Signup error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }
