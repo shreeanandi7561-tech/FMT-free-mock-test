@@ -1,3 +1,9 @@
-"dependencies": {
-  "@supabase/supabase-js": "^2.39.0"
+{
+  "name": "fmt-free-mock-test",
+  "version": "1.0.0",
+  "description": "Free Mock Test Platform",
+  "type": "module",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
 }
